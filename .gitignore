@@ -40,8 +40,8 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Initial documentation and design files
-*.md
+# Initial documentation and design files (tidak dipush ke GitHub)
 *.mermaid
 *.sql
-!README.md
+TilikAman_PRD.md
+tilikaman_escalation_spec.md
