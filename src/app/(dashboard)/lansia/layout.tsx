@@ -74,19 +74,7 @@ export default function LansiaLayout({
           </div>
         </div>
 
-        <div className="px-6 py-4 border-b border-slate-100 bg-slate-50/50">
-          <div className="flex items-center gap-3">
-            <div className="w-11 h-11 rounded-full bg-sky-100 border border-sky-300 flex items-center justify-center text-sky-800 font-black text-sm flex-shrink-0">
-              BP
-            </div>
-            <div className="min-w-0">
-              <p className="font-black text-slate-900 text-sm truncate">Bapak Prabowo</p>
-              <p className="text-slate-400 text-xs font-medium">RT 04 / RW 01</p>
-            </div>
-          </div>
-        </div>
-
-        <nav className="flex-1 px-4 py-4 space-y-1.5">
+        <nav className="flex-1 px-4 py-5 space-y-1.5">
           {NAV_ITEMS.map((item) => {
             const active = isActive(item.href, item.exact);
             return (
@@ -128,7 +116,7 @@ export default function LansiaLayout({
           <div className="flex items-center gap-3">
             <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-slate-100/80 border border-slate-200/80 text-slate-700 text-xs font-black">
               <span className="w-2 h-2 rounded-full bg-[#38BDF8]" />
-              <span>RT 04 / RW 01 · Komunitas Lansia Siaga</span>
+              <span>RT 04 / RW 01 - Komunitas Lansia Siaga</span>
             </div>
             <span className="text-slate-400 text-xs font-semibold">Rabu, 26 Agustus 2026</span>
           </div>
@@ -142,7 +130,7 @@ export default function LansiaLayout({
             <div className="flex items-center gap-3 pl-3 border-l border-slate-200">
               <div className="text-right">
                 <p className="text-[13px] font-black text-slate-900 leading-tight">Bapak Prabowo</p>
-                <p className="text-[10.5px] font-bold text-slate-400">Warga Lansia · Blok C4</p>
+                <p className="text-[10.5px] font-bold text-slate-400">Warga Lansia - Blok C4</p>
               </div>
               <div className="w-10 h-10 rounded-full bg-[#38BDF8] text-white flex items-center justify-center font-black text-xs shadow-sm border-2 border-white ring-2 ring-sky-100">
                 BP
