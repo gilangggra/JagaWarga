@@ -4,51 +4,6 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 
-function IlluWheelchair() {
-  return (
-    <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <circle cx="100" cy="75" r="55" fill="rgba(255,255,255,0.15)" />
-      <circle cx="75" cy="115" r="20" fill="none" stroke="white" strokeWidth="4" />
-      <circle cx="75" cy="115" r="6" fill="white" />
-      <circle cx="130" cy="115" r="14" fill="none" stroke="white" strokeWidth="3.5" />
-      <circle cx="130" cy="115" r="4" fill="white" />
-      <path d="M75 96 L75 70 L108 70 L118 95 L130 102" stroke="white" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-      <path d="M75 96 L130 102" stroke="white" strokeWidth="3.5" strokeLinecap="round" />
-      <rect x="76" y="60" width="38" height="14" rx="7" fill="rgba(255,255,255,0.3)" />
-      <circle cx="98" cy="48" r="13" fill="#FED7AA" />
-      <rect x="85" y="58" width="26" height="18" rx="8" fill="rgba(255,255,255,0.3)" />
-    </svg>
-  );
-}
-
-function IlluOxygen() {
-  return (
-    <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <circle cx="100" cy="75" r="55" fill="rgba(255,255,255,0.15)" />
-      <rect x="86" y="42" width="28" height="68" rx="10" fill="white" />
-      <rect x="94" y="32" width="12" height="12" rx="3" fill="rgba(255,255,255,0.8)" />
-      <circle cx="118" cy="42" r="10" fill="white" />
-      <path d="M118 36 L118 42 L122 42" stroke="#0D9488" strokeWidth="2" strokeLinecap="round" />
-      <path d="M96 68 L104 68 M100 64 L100 72" stroke="#0D9488" strokeWidth="2.5" strokeLinecap="round" />
-      <text x="100" y="94" textAnchor="middle" fontSize="10" fill="#0D9488" fontWeight="900">O2</text>
-    </svg>
-  );
-}
-
-function IlluCane() {
-  return (
-    <svg viewBox="0 0 200 150" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full">
-      <circle cx="100" cy="75" r="55" fill="rgba(255,255,255,0.15)" />
-      <path d="M90 35 C90 28, 105 28, 105 35 L105 100" stroke="white" strokeWidth="4" strokeLinecap="round" />
-      <path d="M105 100 L85 125 M105 100 L95 125 M105 100 L115 125 M105 100 L125 125" stroke="white" strokeWidth="3" strokeLinecap="round" />
-      <circle cx="85" cy="125" r="3" fill="rgba(255,255,255,0.7)" />
-      <circle cx="95" cy="125" r="3" fill="rgba(255,255,255,0.7)" />
-      <circle cx="115" cy="125" r="3" fill="rgba(255,255,255,0.7)" />
-      <circle cx="125" cy="125" r="3" fill="rgba(255,255,255,0.7)" />
-    </svg>
-  );
-}
-
 const ALKES_LIST = [
   {
     id: "kursi-roda",
@@ -56,12 +11,11 @@ const ALKES_LIST = [
     status: "tersedia" as const,
     unitText: "2 Unit Tersedia",
     keterangan: "Tersedia 2 unit di Pos RT 04",
-    estimasi: "Siap Antar (di bawah 5 Menit)",
+    estimasi: "Siap Antar (< 5 Menit)",
     bg: "bg-teal-600",
     lightBg: "bg-teal-50",
     lightText: "text-teal-700",
     lightBorder: "border-teal-200",
-    illustration: <IlluWheelchair />,
     photoSrc: "/alkes-kursi-roda.jpg",
     desc: "Ringan, mudah dilipat, dilengkapi rem tangan ganda dan pijakan kaki nyaman.",
     spesifikasi: [
@@ -87,7 +41,6 @@ const ALKES_LIST = [
     lightBg: "bg-amber-50",
     lightText: "text-amber-800",
     lightBorder: "border-amber-200",
-    illustration: <IlluOxygen />,
     photoSrc: "/alkes-tabung-o2.jpg",
     desc: "Tabung oksigen medis lengkap dengan regulator, selang kanula steril baru, dan troli roda.",
     spesifikasi: [
@@ -106,12 +59,11 @@ const ALKES_LIST = [
     status: "tersedia" as const,
     unitText: "3 Unit Tersedia",
     keterangan: "Tersedia 3 unit di Pos RT",
-    estimasi: "Siap Antar (di bawah 5 Menit)",
+    estimasi: "Siap Antar (< 5 Menit)",
     bg: "bg-amber-600",
     lightBg: "bg-amber-50",
     lightText: "text-amber-700",
     lightBorder: "border-amber-200",
-    illustration: <IlluCane />,
     photoSrc: "/alkes-tongkat-jalan.jpg",
     desc: "Ketinggian dapat diatur 10 tingkat, karet anti-selip kokoh, pegangan busa ergonomis.",
     spesifikasi: [
@@ -144,7 +96,7 @@ export default function AlkesPage() {
   };
 
   return (
-    <div className="flex flex-col flex-1 pb-32 lg:pb-12 min-h-full font-sans bg-[#F8FAFC]">
+    <div className="flex flex-col flex-1 min-h-full font-sans pb-32 lg:pb-12 bg-[#F8FAFC]">
 
       <header className="lg:hidden sticky top-0 z-20 pt-3 px-4 pb-2">
         <div className="bg-white rounded-2xl shadow-xs border border-slate-200/60 px-4 h-14 flex items-center justify-between">
@@ -152,7 +104,7 @@ export default function AlkesPage() {
             <Link
               href="/lansia"
               id="btn-back-alkes-mobile"
-              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-600 flex items-center justify-center active:scale-95 transition-all"
+              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-600 flex items-center justify-center active:scale-95 transition-all"
               title="Kembali ke Beranda"
             >
               <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
@@ -161,45 +113,34 @@ export default function AlkesPage() {
             </Link>
             <div>
               <p className="text-teal-700 text-[10px] font-black uppercase tracking-wider">Kas Jimpitan Warga</p>
-              <h1 className="text-[15px] font-black text-slate-900 leading-none">Katalog Alkes RT 04</h1>
+              <h1 className="text-[15px] font-black text-slate-900 leading-none">Pinjam Alkes Kas RT</h1>
             </div>
           </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200">
+          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-black">
             <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-700 text-[10px] font-black">Gratis 100%</span>
+            <span>3 Siaga</span>
           </div>
         </div>
       </header>
 
-      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 py-3 sm:py-5 space-y-4 sm:space-y-5">
+      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-4 sm:space-y-6">
 
         <div className="hidden lg:flex items-center justify-between pb-1">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/lansia"
-              id="btn-back-alkes-desktop"
-              className="flex items-center gap-2 px-4 py-2.5 rounded-2xl bg-white hover:bg-slate-100 text-slate-700 font-black text-xs shadow-2xs border border-slate-200/80 active:scale-95 transition-all"
-            >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4 text-slate-500">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-              </svg>
-              <span>Kembali ke Beranda</span>
-            </Link>
-            <div>
-              <p className="text-slate-400 text-[11px] font-extrabold uppercase tracking-widest">Kas Gotong Royong Warga</p>
-              <h1 className="text-2xl font-black text-slate-900 leading-tight">Jimpitan Alat Kesehatan RT 04</h1>
-            </div>
+          <div>
+            <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-tight">
+              Pinjam Alkes Kas RT
+            </h1>
           </div>
-          <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-white border border-emerald-200 shadow-2xs">
-            <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-800 text-xs font-black">100% Bebas Biaya Sewa</span>
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 shadow-2xs">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="text-emerald-800 text-xs font-black">3 Relawan Siaga RT 04</span>
           </div>
         </div>
 
         {pinjamSuccess && (
-          <div className="bg-[#00624E] text-white p-4 sm:p-5 rounded-[24px] shadow-lg shadow-emerald-900/20 flex items-center justify-between gap-4 animate-in fade-in">
+          <div className="bg-[#00624E] text-white p-4 sm:p-5 rounded-[24px] sm:rounded-[26px] shadow-sm flex items-center justify-between gap-4 animate-in fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="w-5 h-5">
                   <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
                 </svg>
@@ -221,9 +162,9 @@ export default function AlkesPage() {
         )}
 
         {reminderSuccess && (
-          <div className="bg-amber-600 text-white p-4 sm:p-5 rounded-[24px] shadow-lg shadow-amber-900/20 flex items-center justify-between gap-4 animate-in fade-in">
+          <div className="bg-amber-600 text-white p-4 sm:p-5 rounded-[24px] sm:rounded-[26px] shadow-sm flex items-center justify-between gap-4 animate-in fade-in">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center flex-shrink-0">
+              <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} className="w-5 h-5 text-white">
                   <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 0 0 5.454-1.31A8.967 8.967 0 0 1 18 9.75V9A6 6 0 0 0 6 9v.75a8.967 8.967 0 0 1-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 0 1-5.714 0m5.714 0a3 3 0 1 1-5.714 0" />
                 </svg>
@@ -251,20 +192,26 @@ export default function AlkesPage() {
             return (
               <div
                 key={alkes.id}
-                className={`bg-white rounded-[24px] sm:rounded-[26px] border border-slate-200/70 shadow-xs overflow-hidden flex flex-col justify-between hover:shadow-md transition-all duration-200 ${
+                className={`bg-white rounded-[24px] sm:rounded-[26px] border border-slate-200/70 shadow-xs overflow-hidden flex flex-col justify-between hover:border-slate-300 hover:shadow-xs transition-all duration-200 ${
                   !isTersedia ? "opacity-95" : ""
                 }`}
               >
-                <div className={`${alkes.bg} h-36 sm:h-40 relative overflow-hidden flex items-center justify-center p-4 ${
-                  !isTersedia ? "grayscale-[0.6] opacity-90" : ""
-                }`}>
-                  <div className="absolute -bottom-8 -right-8 w-28 h-28 bg-white/15 rounded-full pointer-events-none" />
-                  <div className="w-full h-full">{alkes.illustration}</div>
+                <div className="h-44 sm:h-48 relative overflow-hidden bg-slate-100 flex items-center justify-center">
+                  <Image
+                    src={alkes.photoSrc}
+                    alt={`Foto ${alkes.nama}`}
+                    fill
+                    className={`object-cover transition-transform duration-300 ${
+                      !isTersedia ? "grayscale-[0.5] opacity-80" : ""
+                    }`}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-slate-900/50 via-transparent to-black/20" />
 
-                  <span className={`absolute top-3.5 left-3.5 backdrop-blur-md text-[10.5px] sm:text-[11px] font-black px-3 py-1 rounded-full shadow-2xs border ${
+                  <span className={`absolute top-3.5 left-3.5 backdrop-blur-md text-[10px] sm:text-[10.5px] font-black px-2.5 py-0.5 rounded-full shadow-2xs border ${
                     isTersedia
-                      ? "bg-white/95 text-emerald-800 border-emerald-200/60"
-                      : "bg-amber-50/95 text-amber-900 border-amber-300"
+                      ? "bg-white/95 text-emerald-800 border-white/60"
+                      : "bg-amber-500 text-white border-amber-400"
                   }`}>
                     {alkes.unitText}
                   </span>
@@ -305,19 +252,19 @@ export default function AlkesPage() {
                   <div className="space-y-2 pt-1">
                     <button
                       onClick={() => setDetailAlkes(alkes)}
-                      className="w-full py-2.5 rounded-full font-black text-xs border transition-all active:scale-95 flex items-center justify-center gap-2 text-slate-700 border-slate-200 bg-slate-50 hover:border-slate-300 hover:bg-white"
+                      className="w-full py-2.5 rounded-full font-bold text-xs border transition-all active:scale-95 flex items-center justify-center gap-2 text-slate-700 border-slate-200/80 bg-slate-50/70 hover:bg-slate-100 hover:border-slate-300"
                     >
-                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} className="w-3.5 h-3.5">
+                      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.2} className="w-3.5 h-3.5 text-slate-600">
                         <path strokeLinecap="round" strokeLinejoin="round" d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
                         <path strokeLinecap="round" strokeLinejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
                       </svg>
-                      <span>Lihat Spesifikasi dan Foto</span>
+                      <span>Lihat Spesifikasi &amp; Foto</span>
                     </button>
 
                     {isTersedia ? (
                       <button
                         onClick={() => setSelectedAlkes(alkes)}
-                        className={`w-full py-3 rounded-full font-black text-xs text-white shadow-xs active:scale-95 transition-all flex items-center justify-center gap-2 ${alkes.bg}`}
+                        className="w-full py-3 rounded-full font-black text-xs text-white shadow-xs bg-[#00624E] hover:bg-[#004d3d] active:scale-95 transition-all flex items-center justify-center gap-2"
                       >
                         <span>Ajukan Pinjam Gratis</span>
                         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
@@ -358,7 +305,7 @@ export default function AlkesPage() {
           </div>
           <Link
             href="/lansia"
-            className="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-black text-xs transition-all shrink-0"
+            className="px-5 py-2.5 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all shrink-0"
           >
             Hubungi Pengurus RT
           </Link>
@@ -391,10 +338,10 @@ export default function AlkesPage() {
                 </svg>
               </button>
               <div className="absolute bottom-3 left-4 right-4 flex items-center justify-between">
-                <span className={`text-[10.5px] font-black px-3 py-0.5 rounded-full border ${detailAlkes.kondisiBg}`}>
+                <span className={`text-[10px] font-black px-3 py-0.5 rounded-full border ${detailAlkes.kondisiBg}`}>
                   {detailAlkes.kondisi}
                 </span>
-                <span className="text-[10.5px] font-black px-3 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-slate-800 border border-white/50">
+                <span className="text-[10px] font-black px-3 py-0.5 rounded-full bg-white/90 backdrop-blur-sm text-slate-800 border border-white/50">
                   {detailAlkes.unitText}
                 </span>
               </div>
@@ -435,7 +382,7 @@ export default function AlkesPage() {
                       setDetailAlkes(null);
                       setSelectedAlkes(detailAlkes);
                     }}
-                    className={`w-full py-3.5 rounded-full font-black text-xs text-white shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 ${detailAlkes.bg}`}
+                    className="w-full py-3.5 rounded-full font-black text-xs text-white shadow-xs bg-[#00624E] hover:bg-[#004d3d] active:scale-95 transition-all flex items-center justify-center gap-2"
                   >
                     <span>Ajukan Pinjam Gratis</span>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
@@ -511,9 +458,9 @@ export default function AlkesPage() {
               <div className="space-y-2 pt-1">
                 <button
                   onClick={() => handlePinjam(selectedAlkes.nama)}
-                  className={`w-full py-3.5 rounded-full font-black text-xs text-white shadow-md active:scale-95 transition-all flex items-center justify-center gap-2 ${selectedAlkes.bg}`}
+                  className="w-full py-3.5 rounded-full font-black text-xs text-white shadow-xs bg-[#00624E] hover:bg-[#004d3d] active:scale-95 transition-all flex items-center justify-center gap-2"
                 >
-                  <span>Konfirmasi dan Antar Sekarang</span>
+                  <span>Konfirmasi &amp; Antar Sekarang</span>
                   <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-3.5 h-3.5">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M13.5 4.5 21 12m0 0-7.5 7.5M21 12H3" />
                   </svg>
