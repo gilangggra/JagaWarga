@@ -2,264 +2,374 @@
 
 import Link from "next/link";
 import { useState } from "react";
-
-const STEPS = [
-  {
-    id: "dibuat",
-    label: "Permintaan Diterima Sistem",
-    sub: "Pukul 10:42 WIB",
-    status: "done",
-    desc: "Permintaan bantuan tercatat dan otomatis diteruskan ke relawan.",
-  },
-  {
-    id: "menuju",
-    label: "Relawan Menuju Rumah Anda",
-    sub: "Estimasi tiba: 3 - 5 Menit",
-    status: "active",
-    desc: "Budi Santoso sedang dalam perjalanan membawa kebutuhan Bapak.",
-  },
-  {
-    id: "tiba",
-    label: "Tiba di Rumah dan Serah Terima",
-    sub: "Pintu Depan Rumah",
-    status: "pending",
-    desc: "Relawan sampai dan menyerahkan bantuan.",
-  },
-  {
-    id: "selesai",
-    label: "Bantuan Selesai",
-    sub: "Konfirmasi Otomatis",
-    status: "pending",
-    desc: "Laporan masuk ke posko RT dan anak di perantauan.",
-  },
-];
+import { 
+  ArrowLeft, 
+  Check, 
+  Car, 
+  Clock, 
+  MapPin, 
+  Phone, 
+  ShieldCheck, 
+  AlertCircle
+} from "lucide-react";
 
 export default function StatusPage() {
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [showCallModal, setShowCallModal] = useState(false);
   const [bantuanSelesai, setBantuanSelesai] = useState(false);
 
   return (
-    <div className="flex flex-col flex-1 min-h-full font-sans pb-36 lg:pb-12 bg-[#F8FAFC]">
+    <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 font-sans pb-36 sm:pb-32 lg:pb-12 bg-[#F8FAFC]">
+      
+      
+      <div>
+        <Link
+          href="/lansia"
+          id="btn-back-status"
+          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+        >
+          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <span>Kembali ke Beranda</span>
+        </Link>
+      </div>
 
-      <header className="lg:hidden sticky top-0 z-20 pt-3 px-4 pb-2">
-        <div className="bg-white rounded-2xl shadow-xs border border-slate-200/60 px-4 h-14 flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <Link
-              href="/lansia"
-              id="btn-back-status"
-              className="w-8 h-8 rounded-xl bg-slate-100 hover:bg-sky-50 text-slate-600 flex items-center justify-center active:scale-95 transition-all"
-              title="Kembali ke Beranda"
+      
+      <div className="space-y-1">
+        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+          Lacak Bantuan &amp; Serah Terima
+        </h1>
+        <p className="text-sm sm:text-base font-medium text-slate-500">
+          Relawan terdekat sedang memproses permintaan obat Bapak Prabowo.
+        </p>
+      </div>
+
+      
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+
+        
+        <div className="lg:col-span-7 space-y-6">
+
+          
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-7 shadow-xs space-y-6">
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div>
+                <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Proses Langsung</span>
+                <h2 className="font-black text-slate-900 text-lg leading-tight">Status Perjalanan</h2>
+              </div>
+              <span className="text-xs font-black text-emerald-800 bg-[#E6F4EA] border border-emerald-200/80 px-3 py-1 rounded-full flex items-center gap-1.5">
+                <Clock className="w-3.5 h-3.5 text-[#00624E]" />
+                <span>Estimasi ~6 Menit</span>
+              </span>
+            </div>
+
+            
+            <div className="space-y-6 relative pl-2">
+              
+              
+              <div className="flex items-start gap-4 relative">
+                <div className="absolute left-4 top-9 bottom-[-24px] w-[2px] bg-[#00624E]" />
+                
+                <div className="w-8 h-8 rounded-full bg-[#00624E] text-white flex items-center justify-center font-black text-xs flex-shrink-0 z-10 shadow-xs">
+                  <Check className="w-4 h-4 stroke-[3]" />
+                </div>
+                
+                <div className="flex-1 p-3.5 rounded-2xl bg-slate-50 border border-slate-200/70">
+                  <div className="flex items-center justify-between">
+                    <p className="font-black text-sm text-slate-900">Permintaan Dibuat</p>
+                    <span className="text-[11px] font-bold text-slate-500">10:42 WIB</span>
+                  </div>
+                  <p className="text-xs font-medium text-slate-500 mt-0.5">
+                    Permintaan obat darah tinggi (Amlodipine) tercatat dan diterima relawan.
+                  </p>
+                </div>
+              </div>
+
+              
+              <div className="flex items-start gap-4 relative">
+                <div className="absolute left-4 top-9 bottom-[-24px] w-[2px] bg-slate-200" />
+                
+                <div className="w-8 h-8 rounded-full bg-sky-600 text-white flex items-center justify-center font-black text-xs flex-shrink-0 z-10 shadow-md ring-4 ring-sky-100 animate-pulse">
+                  <Car className="w-4 h-4" />
+                </div>
+                
+                <div className="flex-1 p-3.5 rounded-2xl bg-sky-50/80 border border-sky-200">
+                  <div className="flex items-center justify-between">
+                    <p className="font-black text-sm text-sky-950">Relawan Menuju Lokasi</p>
+                    <span className="text-[11px] font-black text-sky-700 bg-sky-100 px-2 py-0.5 rounded-full">
+                      Sedang Jalan
+                    </span>
+                  </div>
+                  <p className="text-xs font-semibold text-sky-900/90 mt-1 leading-relaxed">
+                    Pak Teddy sedang membelikan obat di apotek • Estimasi tiba 6 menit ke rumah Bapak.
+                  </p>
+                </div>
+              </div>
+
+              
+              <div className="flex items-start gap-4 relative">
+                <div className="absolute left-4 top-9 bottom-[-24px] w-[2px] bg-slate-200" />
+                
+                <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 text-slate-400 flex items-center justify-center font-black text-xs flex-shrink-0 z-10">
+                  3
+                </div>
+                
+                <div className="flex-1 p-3.5 rounded-2xl bg-white border border-slate-100 opacity-60">
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold text-sm text-slate-800">Tiba di Lokasi &amp; Penyerahan</p>
+                    <span className="text-[11px] font-medium text-slate-400">Pintu Rumah</span>
+                  </div>
+                  <p className="text-xs font-medium text-slate-400 mt-0.5">
+                    Relawan sampai dan menyerahkan obat pesanan di depan pintu rumah.
+                  </p>
+                </div>
+              </div>
+
+              
+              <div className="flex items-start gap-4 relative">
+                <div className="w-8 h-8 rounded-full bg-slate-100 border border-slate-300 text-slate-400 flex items-center justify-center font-black text-xs flex-shrink-0 z-10">
+                  4
+                </div>
+                
+                <div className="flex-1 p-3.5 rounded-2xl bg-white border border-slate-100 opacity-60">
+                  <div className="flex items-center justify-between">
+                    <p className="font-bold text-sm text-slate-800">Selesai &amp; Terverifikasi</p>
+                    <span className="text-[11px] font-medium text-slate-400">Otomatis</span>
+                  </div>
+                  <p className="text-xs font-medium text-slate-400 mt-0.5">
+                    Konfirmasi selesai terkirim otomatis ke Dewi (Anak) via WhatsApp.
+                  </p>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+          
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
+            <div className="flex items-center justify-between">
+              <h3 className="font-black text-slate-900 text-base">Relawan yang Bertugas</h3>
+              <span className="text-[11px] font-bold text-emerald-800 bg-[#E6F4EA] border border-emerald-200 px-2.5 py-0.5 rounded-full">
+                Siaga Aktif
+              </span>
+            </div>
+
+            <div className="flex items-center gap-3.5 p-3.5 rounded-2xl bg-slate-50/90 border border-slate-200/70">
+              <div className="w-12 h-12 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-base shadow-xs flex-shrink-0">
+                PT
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="font-black text-slate-900 text-sm sm:text-base leading-snug truncate">
+                  Pak Teddy
+                </p>
+                <p className="text-slate-500 text-xs font-medium truncate">
+                  Tetangga Blok C4, No. 12
+                </p>
+                <p className="text-xs font-bold text-[#00624E] flex items-center gap-1 mt-0.5">
+                  <MapPin className="w-3.5 h-3.5" />
+                  <span>50m dari rumah Bapak</span>
+                </p>
+              </div>
+            </div>
+
+            <button
+              id="btn-call-volunteer"
+              onClick={() => setShowCallModal(true)}
+              className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm text-white shadow-sm bg-[#00624E] hover:bg-[#004d3d] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
             >
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
-                <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-              </svg>
-            </Link>
-            <div>
-              <p className="text-sky-600 text-[10px] font-black uppercase tracking-wider">Pelacakan Langsung</p>
-              <h1 className="text-[15px] font-black text-slate-900 leading-none">Status Bantuan</h1>
+              <Phone className="w-4 h-4" />
+              <span>Telepon Relawan Pak Teddy</span>
+            </button>
+          </div>
+
+        </div>
+
+        
+        <div className="lg:col-span-5 space-y-4">
+
+          
+          <div className="bg-white rounded-3xl border border-slate-200/80 p-6 sm:p-7 shadow-xs space-y-5 text-center">
+            
+            <div className="flex items-center justify-between pb-3 border-b border-slate-100">
+              <div className="text-left">
+                <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Verifikasi Aman</span>
+                <h2 className="font-black text-slate-900 text-lg leading-tight">Keamanan &amp; Serah Terima</h2>
+              </div>
+              <span className="w-8 h-8 rounded-full bg-[#E6F4EA] text-[#00624E] flex items-center justify-center shadow-2xs">
+                <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
+              </span>
             </div>
-          </div>
-          <div className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-700 text-[11px] font-black">
-            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
-            <span>3 Siaga</span>
-          </div>
-        </div>
-      </header>
 
-      <main className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3 sm:py-6 space-y-4 sm:space-y-6">
-
-        <div className="hidden lg:flex items-center justify-between pb-1">
-          <div>
-            <h1 className="text-2xl font-black text-slate-900 tracking-tight leading-tight">
-              Status Permintaan Bantuan
-            </h1>
-          </div>
-          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-emerald-200 shadow-2xs">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-            <span className="text-emerald-800 text-xs font-black">3 Relawan Siaga RT 04</span>
-          </div>
-        </div>
-
-        <div className="bg-[#0284C7] rounded-[22px] sm:rounded-[26px] p-4 sm:p-6 text-white shadow-sm relative overflow-hidden flex flex-col sm:flex-row items-center justify-between gap-4">
-          <div className="absolute -bottom-10 -right-10 w-44 h-44 bg-white/10 rounded-full pointer-events-none" />
-          <div className="relative z-10 space-y-1.5 sm:space-y-2 text-center sm:text-left">
-            <span className="inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full bg-white/20 text-white text-[10px] sm:text-[10.5px] font-black uppercase tracking-wider backdrop-blur-sm border border-white/25">
-              <span className="w-1.5 h-1.5 rounded-full bg-white animate-ping" />
-              <span>Dalam Perjalanan</span>
-            </span>
-            <h2 className="text-lg sm:text-2xl font-black leading-tight">
-              Budi Santoso Sedang Menuju Rumah Bapak
-            </h2>
-            <p className="text-sky-50 text-xs sm:text-sm font-medium leading-relaxed max-w-lg">
-              Harap tetap santai di dalam rumah. Relawan membawa pesanan obat dan akan tiba dalam <strong>3-5 menit</strong>.
+            
+            <p className="text-xs sm:text-sm text-slate-600 font-semibold max-w-sm mx-auto leading-relaxed">
+              Tunjukkan QR ini kepada Pak Teddy, atau sebutkan PIN 4 angka di bawah:
             </p>
+
+            
+            <div className="w-56 h-56 mx-auto bg-white p-3.5 rounded-2xl border-2 border-slate-200/80 shadow-xs flex items-center justify-center relative group">
+              <svg viewBox="0 0 100 100" className="w-full h-full text-slate-900" fill="currentColor">
+                <rect x="0" y="0" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="6" rx="3" />
+                <rect x="7" y="7" width="14" height="14" rx="2" />
+                <rect x="72" y="0" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="6" rx="3" />
+                <rect x="79" y="7" width="14" height="14" rx="2" />
+                <rect x="0" y="72" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="6" rx="3" />
+                <rect x="7" y="79" width="14" height="14" rx="2" />
+                
+                <rect x="36" y="8" width="6" height="6" />
+                <rect x="46" y="8" width="6" height="14" />
+                <rect x="58" y="14" width="6" height="8" />
+                <rect x="8" y="36" width="14" height="6" />
+                <rect x="28" y="36" width="6" height="14" />
+                <rect x="40" y="30" width="20" height="20" rx="4" fill="#00624E" />
+                <rect x="66" y="36" width="10" height="6" />
+                <rect x="82" y="36" width="10" height="12" />
+                <rect x="36" y="58" width="14" height="6" />
+                <rect x="58" y="56" width="8" height="12" />
+                <rect x="72" y="56" width="8" height="8" />
+                <rect x="86" y="56" width="6" height="18" />
+                <rect x="36" y="72" width="10" height="10" />
+                <rect x="52" y="72" width="12" height="6" />
+                <rect x="52" y="84" width="6" height="10" />
+                <rect x="64" y="80" width="8" height="14" />
+              </svg>
+              
+              <div className="absolute inset-0 m-auto w-10 h-10 rounded-xl bg-[#00624E] text-white flex items-center justify-center shadow-md border-2 border-white">
+                <ShieldCheck className="w-5 h-5 stroke-[2.5]" />
+              </div>
+            </div>
+
+            
+            <div className="bg-[#00624E] text-white rounded-2xl p-4 sm:p-5 shadow-sm space-y-1">
+              <p className="text-[11px] font-bold uppercase tracking-widest text-emerald-200">
+                KODE PIN KEAMANAN
+              </p>
+              <p className="text-3xl sm:text-4xl font-black tracking-[0.4em] font-mono leading-none py-1">
+                8 2 4 1
+              </p>
+              <p className="text-[10.5px] text-emerald-100 font-medium">
+                Sebutkan 4 angka di atas saat serah terima barang
+              </p>
+            </div>
+
+            
+            <button
+              onClick={() => setBantuanSelesai(true)}
+              className="w-full py-3 rounded-2xl border border-slate-200 hover:bg-slate-50 text-slate-700 font-bold text-xs transition-all flex items-center justify-center gap-1.5 cursor-pointer active:scale-95"
+            >
+              <Check className="w-3.5 h-3.5 text-[#00624E]" />
+              <span>Simulasikan Barang Diterima</span>
+            </button>
+
           </div>
 
-          <div className="relative z-10 w-14 h-14 sm:w-18 sm:h-18 bg-white/20 rounded-2xl sm:rounded-3xl flex items-center justify-center flex-shrink-0 shadow-inner">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} className="w-7 h-7 sm:w-9 sm:h-9 text-white">
-              <path strokeLinecap="round" strokeLinejoin="round" d="M8.25 18.75a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h6m-9 0H3.375a1.125 1.125 0 0 1-1.125-1.125V14.25m17.25 4.5a1.5 1.5 0 0 1-3 0m3 0a1.5 1.5 0 0 0-3 0m3 0h1.125c.621 0 1.129-.504 1.09-1.124a17.902 17.902 0 0 0-3.213-9.193 2.056 2.056 0 0 0-1.58-.86H14.25M16.5 18.75h-2.25m0-11.25V3.75m0 3.75h-7.5M14.25 7.5H6.75m0 0H4.875c-.621 0-1.125.504-1.125 1.125v6.75" />
-            </svg>
+          
+          <div className="text-center pt-2">
+            <button
+              id="btn-cancel-help"
+              onClick={() => setShowCancelModal(true)}
+              className="text-xs font-bold text-slate-400 hover:text-rose-600 transition-colors py-1 cursor-pointer"
+            >
+              Batalkan Permintaan Bantuan
+            </button>
           </div>
+
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-5 lg:gap-6 items-start">
+      </div>
 
-          <div className="lg:col-span-7 space-y-4 sm:space-y-5">
-            <div className="bg-white rounded-[24px] sm:rounded-[26px] border border-slate-200/70 p-4 sm:p-6 shadow-xs space-y-3.5 sm:space-y-4">
-              <div>
-                <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Alur Proses</span>
-                <h3 className="font-black text-slate-900 text-base leading-tight mt-0.5">Tahapan Bantuan Warga</h3>
-              </div>
-
-              <div className="space-y-3 sm:space-y-3.5">
-                {STEPS.map((step, idx) => {
-                  const isDone = step.status === "done";
-                  const isActive = step.status === "active";
-                  return (
-                    <div key={step.id} className="flex items-start gap-3 sm:gap-3.5 relative">
-                      {idx < STEPS.length - 1 && (
-                        <div
-                          className={`absolute left-4.5 sm:left-5 top-9 sm:top-10 bottom-[-14px] sm:bottom-[-16px] w-[2px] ${isDone ? "bg-[#0284C7]" : "bg-slate-200"}`}
-                        />
-                      )}
-
-                      <div
-                        className={`w-9 h-9 sm:w-10 sm:h-10 rounded-full flex items-center justify-center font-black text-xs flex-shrink-0 z-10 shadow-xs transition-all ${isDone ? "bg-[#0284C7] text-white" : isActive ? "bg-emerald-600 text-white ring-4 ring-emerald-100 animate-pulse" : "bg-slate-100 text-slate-400 border border-slate-200"}`}
-                      >
-                        {isDone ? (
-                          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="w-4 h-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                          </svg>
-                        ) : (
-                          <span>{idx + 1}</span>
-                        )}
-                      </div>
-
-                      <div
-                        className={`flex-1 p-3 sm:p-3.5 rounded-[18px] transition-all ${isActive ? "bg-emerald-50/70 border border-emerald-200" : isDone ? "bg-slate-50/70 border border-slate-200/70" : "bg-white border border-slate-100 opacity-60"}`}
-                      >
-                        <div className="flex items-center justify-between">
-                          <p className={`font-black text-[13px] sm:text-sm ${isActive ? "text-emerald-900" : "text-slate-900"}`}>
-                            {step.label}
-                          </p>
-                          <span
-                            className={`text-[9.5px] sm:text-[10px] font-extrabold px-2 py-0.5 rounded-full ${isActive ? "bg-emerald-200 text-emerald-800" : isDone ? "bg-sky-50 text-sky-800" : "text-slate-400"}`}
-                          >
-                            {step.sub}
-                          </span>
-                        </div>
-                        <p className="text-slate-500 text-xs font-medium mt-0.5 sm:mt-1 leading-relaxed">{step.desc}</p>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          <div className="lg:col-span-5 space-y-4 sm:space-y-5">
-
-            <div className="bg-white rounded-[24px] sm:rounded-[26px] border border-slate-200/70 p-4 sm:p-6 shadow-xs space-y-3 sm:space-y-3.5">
-              <div>
-                <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Relawan Bertugas</span>
-                <h3 className="font-black text-slate-900 text-base leading-tight mt-0.5">Kontak Pendamping</h3>
-              </div>
-
-              <div className="flex items-center gap-3.5 p-3.5 sm:p-4 rounded-[20px] bg-slate-50/70 border border-slate-200/70">
-                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-teal-600 text-white flex items-center justify-center font-black text-base sm:text-lg shadow-sm flex-shrink-0">
-                  BS
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="font-black text-slate-900 text-sm sm:text-base leading-snug">Budi Santoso</p>
-                  <p className="text-emerald-600 text-xs font-extrabold">Relawan Siaga RT 04 - Aktif</p>
-                  <p className="text-slate-400 text-[10.5px] sm:text-[11px] font-medium mt-0.5">Blok C4, No. 12 (50m dari rumah)</p>
-                </div>
-              </div>
-
-              <a
-                href="tel:08123456789"
-                className="w-full py-3 sm:py-3.5 bg-emerald-600 hover:bg-emerald-700 active:scale-95 text-white font-extrabold text-xs sm:text-sm rounded-full shadow-xs flex items-center justify-center gap-2 transition-all"
-              >
-                <svg viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4">
-                  <path fillRule="evenodd" d="M1.5 4.5a3 3 0 0 1 3-3h1.372c.86 0 1.61.586 1.819 1.42l1.105 4.423a1.875 1.875 0 0 1-.694 1.955l-1.293.97c-.135.101-.164.249-.126.352a11.285 11.285 0 0 0 6.697 6.697c.103.038.25.009.352-.126l.97-1.293a1.875 1.875 0 0 1 1.955-.694l4.423 1.105c.834.209 1.42.959 1.42 1.82V19.5a3 3 0 0 1-3 3h-2.25C8.552 22.5 1.5 15.448 1.5 6.75V4.5Z" clipRule="evenodd" />
-                </svg>
-                <span>Telepon Relawan Langsung</span>
-              </a>
+      
+      {showCancelModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onClick={() => setShowCancelModal(false)} />
+          <div className="relative bg-white rounded-[32px] w-full max-w-sm p-6 text-center shadow-2xl border border-slate-100 z-10 overflow-hidden space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-rose-50 text-rose-600 flex items-center justify-center shadow-xs">
+              <AlertCircle className="w-7 h-7 stroke-[2.2]" />
             </div>
 
-            <div className="bg-white rounded-[24px] sm:rounded-[26px] border border-slate-200/70 p-4 sm:p-6 shadow-xs space-y-3 sm:space-y-3.5">
-              <div>
-                <span className="text-[10px] sm:text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Detail Titipan</span>
-                <h3 className="font-black text-slate-900 text-base leading-tight mt-0.5">Beli Obat Apotek</h3>
-              </div>
+            <div>
+              <h3 className="text-lg font-black text-slate-900 leading-tight">
+                Batalkan Permintaan Bantuan?
+              </h3>
+              <p className="text-slate-500 text-xs font-medium mt-1">
+                Pak Teddy sudah dalam perjalanan. Apakah Bapak yakin ingin membatalkan bantuan ini?
+              </p>
+            </div>
 
-              <div className="bg-slate-50/70 border border-slate-200/70 rounded-[18px] p-3.5 sm:p-4 text-xs space-y-2.5">
-                <div className="flex justify-between">
-                  <span className="text-slate-400 font-medium">Pemohon:</span>
-                  <span className="font-black text-slate-800">Bapak Prabowo (Lansia)</span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-400 font-medium">Catatan:</span>
-                  <span className="font-bold text-slate-800">Obat Darah Tinggi (Amlodipine)</span>
-                </div>
-                <div className="flex justify-between items-center pt-1 border-t border-slate-100">
-                  <span className="text-slate-400 font-medium">Notifikasi Anak:</span>
-                  <span className="inline-flex items-center gap-1.5 font-black text-emerald-700 bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full text-[10.5px]">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="w-3 h-3 text-emerald-700">
-                      <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                    </svg>
-                    <span>Terkirim ke Dewi (WhatsApp)</span>
-                  </span>
-                </div>
-              </div>
-
-              <button
-                onClick={() => setBantuanSelesai(true)}
-                className="w-full py-3.5 bg-[#00624E] hover:bg-[#004d3d] active:scale-95 text-white font-black text-xs sm:text-sm rounded-full shadow-md transition-all flex items-center justify-center gap-2"
-              >
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2.5} className="w-4 h-4">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-                </svg>
-                <span>Konfirmasi Bantuan Sudah Diterima</span>
-              </button>
-
+            <div className="space-y-2 pt-1">
               <Link
                 href="/lansia"
-                className="block text-center text-xs font-bold text-slate-400 hover:text-sky-700 transition-colors pt-1"
+                className="w-full py-3.5 bg-rose-600 hover:bg-rose-700 active:scale-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-sm transition-all flex items-center justify-center"
               >
-                Kembali ke Dashboard Lansia
+                Ya, Batalkan Sekarang
               </Link>
+              <button
+                onClick={() => setShowCancelModal(false)}
+                className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-2xl transition-all cursor-pointer"
+              >
+                Tidak, Lanjutkan Bantuan
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      
+      {showCallModal && (
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-in fade-in duration-200">
+          <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onClick={() => setShowCallModal(false)} />
+          <div className="relative bg-white rounded-[32px] w-full max-w-sm p-6 text-center shadow-2xl border border-slate-100 z-10 overflow-hidden space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-14 h-14 mx-auto rounded-2xl bg-[#E6F4EA] text-[#00624E] flex items-center justify-center shadow-xs">
+              <Phone className="w-7 h-7" />
             </div>
 
+            <div>
+              <h3 className="text-lg font-black text-slate-900 leading-tight">Hubungi Pak Teddy</h3>
+              <p className="text-[#00624E] text-xs font-bold mt-0.5">Relawan Siaga Aktif (50m)</p>
+              <p className="text-slate-400 text-xs mt-1">Nomor Telepon: 0812-3456-7890</p>
+            </div>
+
+            <div className="space-y-2 pt-1">
+              <a
+                href="tel:081234567890"
+                className="w-full py-3.5 bg-[#00624E] hover:bg-[#004d3d] active:scale-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-sm flex items-center justify-center gap-2 transition-all"
+              >
+                <Phone className="w-4 h-4" />
+                <span>Panggil Sekarang</span>
+              </a>
+              <button
+                onClick={() => setShowCallModal(false)}
+                className="w-full py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-600 font-bold text-xs rounded-2xl transition-all cursor-pointer"
+              >
+                Tutup
+              </button>
+            </div>
           </div>
-
         </div>
+      )}
 
-      </main>
-
+      
       {bantuanSelesai && (
-        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4">
+        <div className="fixed inset-0 z-[110] flex items-center justify-center p-4 animate-in fade-in duration-200">
           <div className="absolute inset-0 bg-slate-900/50 backdrop-blur-xs" onClick={() => setBantuanSelesai(false)} />
-          <div className="relative bg-white rounded-[32px] w-full max-w-md p-6 sm:p-8 text-center shadow-2xl border border-slate-100 z-10 overflow-hidden space-y-4">
-            <div className="w-16 h-16 mx-auto rounded-2xl bg-emerald-600 text-white flex items-center justify-center shadow-md">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={3} className="w-8 h-8">
-                <path strokeLinecap="round" strokeLinejoin="round" d="m4.5 12.75 6 6 9-13.5" />
-              </svg>
+          <div className="relative bg-white rounded-[32px] w-full max-w-md p-6 sm:p-8 text-center shadow-2xl border border-slate-100 z-10 overflow-hidden space-y-4 animate-in zoom-in-95 duration-200">
+            <div className="w-16 h-16 mx-auto rounded-2xl bg-[#00624E] text-white flex items-center justify-center shadow-md">
+              <Check className="w-8 h-8 stroke-[3]" />
             </div>
             <div>
               <h3 className="text-xl font-black text-slate-900 leading-tight">Alhamdulillah, Bantuan Selesai</h3>
               <p className="text-slate-500 text-xs sm:text-sm leading-relaxed mt-1">
-                Terima kasih. Budi Santoso dan Dewi telah menerima konfirmasi bahwa bantuan telah selesai dengan aman.
+                Obat telah diserahkan dengan aman oleh Pak Teddy. Laporan otomatis terkirim ke Dewi (Anak) dan Posko RT 04.
               </p>
             </div>
             <Link
               href="/lansia"
-              className="block w-full py-3.5 bg-[#00624E] hover:bg-[#004d3d] text-white font-black text-xs sm:text-sm rounded-full shadow-md active:scale-95 transition-all"
+              className="block w-full py-3.5 bg-[#00624E] hover:bg-[#004d3d] text-white font-black text-xs sm:text-sm rounded-2xl shadow-md active:scale-95 transition-all text-center"
             >
               Kembali ke Beranda
             </Link>
           </div>
         </div>
       )}
+
     </div>
   );
 }

@@ -2,8 +2,8 @@ import type { MetadataRoute } from "next";
 
 export default function manifest(): MetadataRoute.Manifest {
   return {
-    name: "TilikAman — Tetangga Saling Cek, Lingkungan Lebih Aman",
-    short_name: "TilikAman",
+    name: "JagaWarga — Tetangga Saling Cek, Lingkungan Lebih Aman",
+    short_name: "JagaWarga",
     description:
       "Platform koordinasi bantuan mikro hiper-lokal berbasis RT/RW untuk menjamin kecepatan respons dan menjaga privasi warga rentan.",
     start_url: "/",
