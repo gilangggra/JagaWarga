@@ -10,18 +10,18 @@ const plusJakartaSans = Plus_Jakarta_Sans({
 
 export const metadata: Metadata = {
   title: {
-    default: "TilikAman — Tetangga Saling Cek, Lingkungan Lebih Aman",
-    template: "%s | TilikAman",
+    default: "JagaWarga — Tetangga Saling Cek, Lingkungan Lebih Aman",
+    template: "%s | JagaWarga",
   },
   description:
     "Platform koordinasi bantuan mikro hiper-lokal berbasis RT/RW. Menjamin kecepatan respons < 15 menit untuk warga rentan, lansia, dan penyandang disabilitas.",
   keywords: ["keamanan lingkungan", "lansia", "RT", "bantuan warga", "civic tech"],
-  authors: [{ name: "TilikAman" }],
-  creator: "TilikAman",
+  authors: [{ name: "JagaWarga" }],
+  creator: "JagaWarga",
   appleWebApp: {
     capable: true,
     statusBarStyle: "black-translucent",
-    title: "TilikAman",
+    title: "JagaWarga",
   },
   formatDetection: {
     telephone: false,
@@ -29,10 +29,10 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "id_ID",
-    title: "TilikAman — Tetangga Saling Cek, Lingkungan Lebih Aman",
+    title: "JagaWarga — Tetangga Saling Cek, Lingkungan Lebih Aman",
     description:
       "Platform koordinasi bantuan mikro hiper-lokal berbasis RT/RW untuk warga rentan.",
-    siteName: "TilikAman",
+    siteName: "JagaWarga",
   },
 };
 

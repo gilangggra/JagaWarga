@@ -6,46 +6,47 @@ import {
   Home, 
   HandHeart, 
   Activity, 
-  Accessibility, 
+  Accessibility,
+  History,
+  BookOpen,
+  Settings, 
   AlertTriangle, 
   Shield, 
   ArrowLeftRight,
-  Settings,
-  History,
-  BookOpen
+  Heart
 } from "lucide-react";
 
 const NAV_ITEMS = [
   {
-    href: "/lansia",
-    label: "Beranda",
-    subtitle: "Laporan & Kebutuhan",
+    href: "/anak",
+    label: "Pemantauan",
+    subtitle: "Kondisi & Kabar Ortu",
     exact: true,
     icon: <Home className="w-5 h-5" />,
   },
   {
-    href: "/lansia/bantuan",
-    label: "Minta Bantuan",
+    href: "/anak/bantuan",
+    label: "Titip Bantuan",
     subtitle: "Obat, Sayur & Relawan",
     exact: false,
     icon: <HandHeart className="w-5 h-5" />,
   },
   {
-    href: "/lansia/status",
+    href: "/anak/status",
     label: "Status Bantuan",
-    subtitle: "Lacak Permintaan",
+    subtitle: "Lacak Perjalanan Relawan",
     exact: false,
     icon: <Activity className="w-5 h-5" />,
   },
   {
-    href: "/lansia/alkes",
+    href: "/anak/alkes",
     label: "Pinjam Alkes",
     subtitle: "Kas RT Bebas Biaya",
     exact: false,
     icon: <Accessibility className="w-5 h-5" />,
   },
   {
-    href: "/lansia/riwayat",
+    href: "/anak/riwayat",
     label: "Riwayat Bantuan",
     subtitle: "Catatan Selesai",
     exact: false,
@@ -53,7 +54,7 @@ const NAV_ITEMS = [
   },
 ];
 
-export default function LansiaLayout({
+export default function AnakLayout({
   children,
 }: {
   children: React.ReactNode;
@@ -71,7 +72,7 @@ export default function LansiaLayout({
         
         
         <div className="p-6 border-b border-slate-100">
-          <Link href="/lansia" className="flex items-center gap-3.5 group">
+          <Link href="/anak" className="flex items-center gap-3.5 group">
             <div className="w-12 h-12 bg-[#00624E] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm text-white group-hover:scale-105 transition-transform">
               <Shield className="w-6 h-6 fill-white/20 stroke-[2.2]" />
             </div>
@@ -79,6 +80,9 @@ export default function LansiaLayout({
               <p className="font-black text-slate-900 text-xl tracking-tight leading-none">
                 JagaWarga
               </p>
+              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#00624E] mt-1 block">
+                Portal Keluarga &amp; Anak
+              </span>
             </div>
           </Link>
         </div>
@@ -120,26 +124,53 @@ export default function LansiaLayout({
               </Link>
             );
           })}
+
+          
+          <Link
+            href="/anak/kesehatan"
+            className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
+              isActive("/anak/kesehatan", false)
+                ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+            }`}
+          >
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+              isActive("/anak/kesehatan", false) ? "bg-[#00624E] text-white shadow-xs" : "bg-purple-100 text-purple-600 group-hover:bg-purple-200"
+            }`}>
+              <Heart className="w-5 h-5" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-sm leading-tight">Catatan Sehat</p>
+              <p className={`text-[11px] font-medium mt-0.5 truncate ${
+                isActive("/anak/kesehatan", false) ? "text-emerald-800" : "text-slate-400"
+              }`}>
+                Tensi &amp; Obat Ortu
+              </p>
+            </div>
+            {isActive("/anak/kesehatan", false) && (
+              <span className="w-2 h-2 rounded-full bg-[#00624E]" />
+            )}
+          </Link>
         </nav>
 
         
         <div className="p-4 border-t border-slate-100 space-y-2.5">
           
           <Link
-            href="/anak"
+            href="/lansia"
             className="flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs py-2.5 rounded-2xl transition-all border border-slate-200/80"
           >
             <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
-            <span>Beralih ke Portal Anak</span>
+            <span>Beralih ke Portal Lansia</span>
           </Link>
 
           
           <Link
-            href="/lansia/darurat"
+            href="/anak/bantuan?darurat=1"
             className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3.5 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
           >
             <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform animate-pulse" />
-            <span>Alarm Darurat SOS</span>
+            <span>Bantuan Darurat Ortu</span>
           </Link>
         </div>
 
@@ -154,26 +185,30 @@ export default function LansiaLayout({
             <span className="text-xs font-bold text-slate-500">
               Rabu, 26 Mei 2024
             </span>
+            <span className="text-xs text-slate-300">•</span>
+            <span className="text-xs font-black text-[#00624E] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
+              Pemantauan Jarak Jauh (Jakarta - Sleman)
+            </span>
           </div>
 
           <div className="flex items-center gap-3">
             
             <Link
-              href="/lansia/panduan"
-              id="btn-desktop-panduan-header"
+              href="/anak/panduan"
+              id="btn-desktop-panduan-anak"
               className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-600 hover:text-[#00624E] text-xs font-bold active:scale-95 transition-all shadow-2xs"
               title="Panduan Cara Pakai JagaWarga"
             >
               <BookOpen className="w-4 h-4 text-[#00624E]" />
-              <span>Panduan Pakai</span>
+              <span>Panduan Keluarga</span>
             </Link>
 
             
             <Link
-              href="/lansia/pengaturan"
-              id="btn-desktop-settings-header"
+              href="/anak/pengaturan"
+              id="btn-desktop-settings-anak"
               className="w-9 h-9 rounded-2xl border border-slate-200 hover:border-emerald-300 hover:bg-slate-100 flex items-center justify-center text-slate-600 hover:text-[#00624E] active:scale-95 transition-all shadow-2xs"
-              title="Pengaturan Teks & Suara"
+              title="Pengaturan Notifikasi & Akun"
             >
               <Settings className="w-4 h-4" />
             </Link>
@@ -182,16 +217,16 @@ export default function LansiaLayout({
 
             
             <Link
-              href="/lansia/profil"
-              id="btn-desktop-profile-header"
+              href="/anak/pengaturan"
+              id="btn-desktop-profile-anak"
               className="flex items-center gap-3 p-1.5 pl-3.5 rounded-2xl hover:bg-slate-100/80 active:scale-95 transition-all group"
-              title="Buka Profil & Data Medis Saya"
+              title="Buka Pengaturan & Akun Saya"
             >
               <span className="text-xs font-black text-slate-900 group-hover:text-[#00624E] transition-colors">
-                Bapak Prabowo
+                Ibu Titiek
               </span>
               <div className="w-9 h-9 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-xs shadow-xs group-hover:scale-105 transition-transform">
-                BP
+                IT
               </div>
             </Link>
           </div>
@@ -201,20 +236,20 @@ export default function LansiaLayout({
         <header className="lg:hidden sticky top-0 z-20 pt-3 px-4 pb-2 bg-[#F8FAFC]">
           <div className="bg-white rounded-2xl shadow-xs border border-slate-200/60 px-4 h-14 flex items-center justify-between">
             <Link
-              href="/lansia/profil"
-              id="btn-mobile-profile-header"
+              href="/anak/pengaturan"
+              id="btn-mobile-profile-anak"
               className="flex items-center gap-2.5 hover:opacity-80 active:scale-95 transition-all"
-              title="Buka Profil & Data Medis Saya"
+              title="Buka Profil & Pengaturan"
             >
               <div className="w-9 h-9 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-xs shadow-xs">
-                BP
+                IT
               </div>
               <div>
                 <p className="text-[10px] font-bold text-slate-400 leading-none">
-                  SELAMAT PAGI
+                  PORTAL KELUARGA
                 </p>
                 <p className="text-xs font-black text-slate-900 leading-tight mt-0.5">
-                  Bapak Prabowo
+                  Ibu Titiek
                 </p>
               </div>
             </Link>
@@ -222,8 +257,8 @@ export default function LansiaLayout({
             <div className="flex items-center gap-1.5">
               
               <Link
-                href="/lansia/panduan"
-                id="btn-mobile-panduan-header"
+                href="/anak/panduan"
+                id="btn-mobile-panduan-anak"
                 className="w-9 h-9 rounded-2xl border border-emerald-200 bg-emerald-50/80 flex items-center justify-center text-[#00624E] active:scale-95 transition-all"
                 title="Buka Panduan"
               >
@@ -232,8 +267,8 @@ export default function LansiaLayout({
 
               
               <Link
-                href="/lansia/pengaturan"
-                id="btn-mobile-settings-header"
+                href="/anak/pengaturan"
+                id="btn-mobile-settings-anak"
                 className="w-9 h-9 rounded-2xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 active:scale-95 transition-all"
                 title="Buka Pengaturan"
               >
@@ -247,6 +282,7 @@ export default function LansiaLayout({
         <main className="flex-1">
           {children}
         </main>
+
       </div>
 
       
@@ -255,56 +291,56 @@ export default function LansiaLayout({
           
           
           <Link
-            href="/lansia"
+            href="/anak"
             className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia", true)
+              isActive("/anak", true)
                 ? "text-[#00624E] font-black"
                 : "text-slate-400 hover:text-slate-600 font-bold"
             }`}
           >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia", true) ? "bg-[#E6F4EA]" : ""}`}>
+            <span className={`p-1.5 rounded-xl ${isActive("/anak", true) ? "bg-[#E6F4EA]" : ""}`}>
               <Home className="w-5 h-5" />
             </span>
-            <span className="text-[9px] mt-0.5">Beranda</span>
+            <span className="text-[9px] mt-0.5">Pantau</span>
           </Link>
 
           
           <Link
-            href="/lansia/bantuan"
+            href="/anak/bantuan"
             className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/bantuan", false)
+              isActive("/anak/bantuan", false)
                 ? "text-[#00624E] font-black"
                 : "text-slate-400 hover:text-slate-600 font-bold"
             }`}
           >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/bantuan", false) ? "bg-[#E6F4EA]" : ""}`}>
+            <span className={`p-1.5 rounded-xl ${isActive("/anak/bantuan", false) ? "bg-[#E6F4EA]" : ""}`}>
               <HandHeart className="w-5 h-5" />
             </span>
-            <span className="text-[9px] mt-0.5">Bantuan</span>
+            <span className="text-[9px] mt-0.5">Titip</span>
           </Link>
 
           
           <Link
-            href="/lansia/darurat"
+            href="/anak/bantuan?darurat=1"
             className="flex flex-col items-center justify-center -mt-5 group"
-            title="Alarm Darurat SOS RT 04"
+            title="Bantuan Darurat Ortu"
           >
             <div className="w-12 h-12 rounded-full bg-[#DC2626] text-white flex items-center justify-center shadow-lg shadow-rose-600/35 border-2 border-white ring-2 ring-rose-100 group-hover:scale-105 active:scale-95 transition-all">
               <AlertTriangle className="w-6 h-6 animate-pulse" />
             </div>
-            <span className="text-[9px] font-black text-rose-600 mt-1">SOS</span>
+            <span className="text-[9px] font-black text-rose-600 mt-1">Darurat</span>
           </Link>
 
           
           <Link
-            href="/lansia/status"
+            href="/anak/status"
             className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/status", false)
+              isActive("/anak/status", false)
                 ? "text-[#00624E] font-black"
                 : "text-slate-400 hover:text-slate-600 font-bold"
             }`}
           >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/status", false) ? "bg-[#E6F4EA]" : ""}`}>
+            <span className={`p-1.5 rounded-xl ${isActive("/anak/status", false) ? "bg-[#E6F4EA]" : ""}`}>
               <Activity className="w-5 h-5" />
             </span>
             <span className="text-[9px] mt-0.5">Status</span>
@@ -312,17 +348,17 @@ export default function LansiaLayout({
 
           
           <Link
-            href="/lansia/alkes"
+            href="/anak/kesehatan"
             className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/alkes", false)
+              isActive("/anak/kesehatan", false)
                 ? "text-[#00624E] font-black"
                 : "text-slate-400 hover:text-slate-600 font-bold"
             }`}
           >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/alkes", false) ? "bg-[#E6F4EA]" : ""}`}>
-              <Accessibility className="w-5 h-5" />
+            <span className={`p-1.5 rounded-xl ${isActive("/anak/kesehatan", false) ? "bg-[#E6F4EA]" : ""}`}>
+              <Heart className="w-5 h-5" />
             </span>
-            <span className="text-[9px] mt-0.5">Alkes</span>
+            <span className="text-[9px] mt-0.5">Sehat</span>
           </Link>
 
         </nav>

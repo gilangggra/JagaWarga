@@ -40,8 +40,11 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Initial documentation and design files (tidak dipush ke GitHub)
+# Documentation, design specs, and schema files (tidak dipush ke GitHub)
 *.mermaid
 *.sql
+JagaWarga_PRD.md
+jagawarga_escalation_spec.md
+SPESIFIKASI_DESAIN_LANSIA.md
 TilikAman_PRD.md
 tilikaman_escalation_spec.md
