@@ -18,19 +18,7 @@ import {
   Check,
 } from "lucide-react";
 
-function speakPrompt(text: string) {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "id-ID";
-      utterance.rate = 0.90;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-    }
-  }
-}
+import { speakIndonesian } from "@/lib/speak";
 
 const PANDUAN_STEPS = [
   {
@@ -154,9 +142,9 @@ export default function PanduanPage() {
         <Link
           href="/lansia"
           id="btn-back-panduan"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
@@ -264,9 +252,9 @@ export default function PanduanPage() {
                           type="button"
                           onClick={(e) => {
                             e.stopPropagation();
-                            speakPrompt(step.speakText);
+                            speakIndonesian(step.speakText);
                           }}
-                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/70 hover:bg-emerald-200 text-[#00624E] text-xs font-black transition-all border border-emerald-200 active:scale-95"
+                          className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-100/70 hover:bg-emerald-200 text-[#00624E] text-xs font-black transition-all border border-emerald-200 active:scale-95 cursor-pointer"
                         >
                           <Volume2 className="w-3.5 h-3.5" />
                           <span>Dengarkan Suara</span>

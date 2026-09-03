@@ -68,112 +68,105 @@ export default function AnakLayout({
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-emerald-100">
       
       
-      <aside className="hidden lg:flex lg:flex-col lg:w-72 xl:w-80 bg-white border-r border-slate-200/80 min-h-screen sticky top-0 h-screen z-30 shadow-[2px_0_16px_rgba(0,0,0,0.02)]">
-        
-        
-        <div className="p-6 border-b border-slate-100">
-          <Link href="/anak" className="flex items-center gap-3.5 group">
-            <div className="w-12 h-12 bg-[#00624E] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm text-white group-hover:scale-105 transition-transform">
-              <Shield className="w-6 h-6 fill-white/20 stroke-[2.2]" />
-            </div>
-            <div>
-              <p className="font-black text-slate-900 text-xl tracking-tight leading-none">
-                JagaWarga
-              </p>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-[#00624E] mt-1 block">
-                Portal Keluarga &amp; Anak
-              </span>
-            </div>
-          </Link>
-        </div>
-
-        
-        <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto">
-          <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-2">
-            Menu Utama
-          </p>
+      <aside className="hidden lg:block lg:w-72 xl:w-80 bg-white border-r border-slate-200/80 self-stretch shrink-0 z-30 shadow-[2px_0_16px_rgba(0,0,0,0.02)]">
+        <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden">
           
-          {NAV_ITEMS.map((item) => {
-            const active = isActive(item.href, item.exact);
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
-                  active
-                    ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
-                    : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
-                }`}
-              >
-                <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-                  active ? "bg-[#00624E] text-white shadow-xs" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
-                }`}>
-                  {item.icon}
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="text-sm leading-tight">{item.label}</p>
-                  <p className={`text-[11px] font-medium mt-0.5 truncate ${
-                    active ? "text-emerald-800" : "text-slate-400"
+          <div className="p-6 border-b border-slate-100 shrink-0">
+            <Link href="/anak" className="flex items-center gap-3.5 group">
+              <div className="w-12 h-12 bg-[#00624E] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm text-white group-hover:scale-105 transition-transform">
+                <Shield className="w-6 h-6 fill-white/20 stroke-[2.2]" />
+              </div>
+              <div>
+                <p className="font-black text-slate-900 text-xl tracking-tight leading-none">
+                  JagaWarga
+                </p>
+              </div>
+            </Link>
+          </div>
+
+          <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto min-h-0">
+            <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-2">
+              Menu Utama
+            </p>
+            
+            {NAV_ITEMS.map((item) => {
+              const active = isActive(item.href, item.exact);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
+                    active
+                      ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+                  }`}
+                >
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                    active ? "bg-[#00624E] text-white shadow-xs" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
                   }`}>
-                    {item.subtitle}
-                  </p>
-                </div>
-                {active && (
-                  <span className="w-2 h-2 rounded-full bg-[#00624E]" />
-                )}
-              </Link>
-            );
-          })}
+                    {item.icon}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="text-sm leading-tight">{item.label}</p>
+                    <p className={`text-[11px] font-medium mt-0.5 truncate ${
+                      active ? "text-emerald-800" : "text-slate-400"
+                    }`}>
+                      {item.subtitle}
+                    </p>
+                  </div>
+                  {active && (
+                    <span className="w-2 h-2 rounded-full bg-[#00624E]" />
+                  )}
+                </Link>
+              );
+            })}
 
-          
-          <Link
-            href="/anak/kesehatan"
-            className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
-              isActive("/anak/kesehatan", false)
-                ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
-                : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
-            }`}
-          >
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-              isActive("/anak/kesehatan", false) ? "bg-[#00624E] text-white shadow-xs" : "bg-purple-100 text-purple-600 group-hover:bg-purple-200"
-            }`}>
-              <Heart className="w-5 h-5" />
-            </div>
-            <div className="min-w-0 flex-1">
-              <p className="text-sm leading-tight">Catatan Sehat</p>
-              <p className={`text-[11px] font-medium mt-0.5 truncate ${
-                isActive("/anak/kesehatan", false) ? "text-emerald-800" : "text-slate-400"
+            <Link
+              href="/anak/kesehatan"
+              className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
+                isActive("/anak/kesehatan", false)
+                  ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+              }`}
+            >
+              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                isActive("/anak/kesehatan", false) ? "bg-[#00624E] text-white shadow-xs" : "bg-purple-100 text-purple-600 group-hover:bg-purple-200"
               }`}>
-                Tensi &amp; Obat Ortu
-              </p>
-            </div>
-            {isActive("/anak/kesehatan", false) && (
-              <span className="w-2 h-2 rounded-full bg-[#00624E]" />
-            )}
-          </Link>
-        </nav>
+                <Heart className="w-5 h-5" />
+              </div>
+              <div className="min-w-0 flex-1">
+                <p className="text-sm leading-tight">Catatan Sehat</p>
+                <p className={`text-[11px] font-medium mt-0.5 truncate ${
+                  isActive("/anak/kesehatan", false) ? "text-emerald-800" : "text-slate-400"
+                }`}>
+                  Tensi &amp; Obat Ortu
+                </p>
+              </div>
+              {isActive("/anak/kesehatan", false) && (
+                <span className="w-2 h-2 rounded-full bg-[#00624E]" />
+              )}
+            </Link>
+          </nav>
 
-        
-        <div className="p-4 border-t border-slate-100 space-y-2.5">
-          
-          <Link
-            href="/lansia"
-            className="flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs py-2.5 rounded-2xl transition-all border border-slate-200/80"
-          >
-            <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
-            <span>Beralih ke Portal Lansia</span>
-          </Link>
+          <div className="p-4 border-t border-slate-100 space-y-2.5 shrink-0">
+            <Link
+              href="/lansia"
+              className="flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs py-2.5 rounded-2xl transition-all border border-slate-200/80"
+            >
+              <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
+              <span>Beralih ke Portal Lansia</span>
+            </Link>
 
-          
-          <Link
-            href="/anak/bantuan?darurat=1"
-            className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3.5 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
-          >
-            <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform animate-pulse" />
-            <span>Bantuan Darurat Ortu</span>
-          </Link>
+            <Link
+              href="/anak/bantuan?darurat=1"
+              className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3.5 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
+            >
+              <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform animate-pulse" />
+              <span>Bantuan Darurat Ortu</span>
+            </Link>
+          </div>
+
         </div>
-
       </aside>
 
       
@@ -184,10 +177,6 @@ export default function AnakLayout({
           <div className="flex items-center gap-3">
             <span className="text-xs font-bold text-slate-500">
               Rabu, 26 Mei 2024
-            </span>
-            <span className="text-xs text-slate-300">•</span>
-            <span className="text-xs font-black text-[#00624E] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-              Pemantauan Jarak Jauh (Jakarta - Sleman)
             </span>
           </div>
 
@@ -217,10 +206,10 @@ export default function AnakLayout({
 
             
             <Link
-              href="/anak/pengaturan"
+              href="/anak/profil"
               id="btn-desktop-profile-anak"
               className="flex items-center gap-3 p-1.5 pl-3.5 rounded-2xl hover:bg-slate-100/80 active:scale-95 transition-all group"
-              title="Buka Pengaturan & Akun Saya"
+              title="Buka Profil Saya"
             >
               <span className="text-xs font-black text-slate-900 group-hover:text-[#00624E] transition-colors">
                 Ibu Titiek
@@ -236,10 +225,10 @@ export default function AnakLayout({
         <header className="lg:hidden sticky top-0 z-20 pt-3 px-4 pb-2 bg-[#F8FAFC]">
           <div className="bg-white rounded-2xl shadow-xs border border-slate-200/60 px-4 h-14 flex items-center justify-between">
             <Link
-              href="/anak/pengaturan"
+              href="/anak/profil"
               id="btn-mobile-profile-anak"
               className="flex items-center gap-2.5 hover:opacity-80 active:scale-95 transition-all"
-              title="Buka Profil & Pengaturan"
+              title="Buka Profil Saya"
             >
               <div className="w-9 h-9 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-xs shadow-xs">
                 IT

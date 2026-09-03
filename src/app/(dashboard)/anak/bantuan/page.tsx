@@ -24,32 +24,36 @@ const BANTUAN_LIST = [
     label: "Beli Obat",
     desc: "Apotek & Resep",
     kategori: "obat",
-    icon: <Pill className="w-6 h-6 text-rose-600 stroke-[2.2]" />,
-    iconBg: "bg-rose-50 border border-rose-100",
+    containerBg: "bg-[#FEE2E2]",
+    iconColor: "text-[#DC2626]",
+    icon: <Pill className="w-7 h-7 stroke-[2.2]" />,
   },
   {
     id: "sayur",
     label: "Beli Sayur",
     desc: "Warung RT / Pasar",
     kategori: "sayur",
-    icon: <ShoppingCart className="w-6 h-6 text-amber-600 stroke-[2.2]" />,
-    iconBg: "bg-amber-50 border border-amber-100",
+    containerBg: "bg-[#FFEDD5]",
+    iconColor: "text-[#EA580C]",
+    icon: <ShoppingCart className="w-7 h-7 stroke-[2.2]" />,
   },
   {
     id: "kontrol",
     label: "Teman Jalan",
     desc: "Posyandu & Dokter",
     kategori: "kontrol",
-    icon: <Heart className="w-6 h-6 text-purple-600 stroke-[2.2]" />,
-    iconBg: "bg-purple-50 border border-purple-100",
+    containerBg: "bg-[#F3E8FF]",
+    iconColor: "text-[#9333EA]",
+    icon: <Heart className="w-7 h-7 stroke-[2.2]" />,
   },
   {
     id: "cek_rumah",
     label: "Cek Rumah",
     desc: "Kunjungan Fisik & Tensi",
     kategori: "cek_rumah",
-    icon: <Home className="w-6 h-6 text-[#00624E] stroke-[2.2]" />,
-    iconBg: "bg-emerald-50 border border-emerald-100",
+    containerBg: "bg-[#E6F4EA]",
+    iconColor: "text-[#00624E]",
+    icon: <Home className="w-7 h-7 stroke-[2.2]" />,
   },
 ];
 
@@ -97,6 +101,7 @@ function BantuanContent() {
   const [selectedKategori, setSelectedKategori] = useState(
     BANTUAN_LIST.find((b) => b.kategori === initialKategori)?.id ?? "obat"
   );
+  const [targetOrtu, setTargetOrtu] = useState<"prabowo" | "lestari">("prabowo");
   const [catatan, setCatatan] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showDaruratModal, setShowDaruratModal] = useState(isDarurat);
@@ -110,14 +115,12 @@ function BantuanContent() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSuccess(true);
-    setCatatan("");
-    setTimeout(() => setIsSuccess(false), 5000);
+    setTimeout(() => setIsSuccess(false), 7000);
   };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 font-sans pb-36 sm:pb-32 lg:pb-12 bg-[#F8FAFC]">
 
-      
       {showDaruratModal && (
         <div className="fixed inset-0 z-[100] flex items-center justify-center p-4">
           <div className="absolute inset-0 bg-slate-900/60 backdrop-blur-xs" onClick={() => setShowDaruratModal(false)} />
@@ -150,19 +153,17 @@ function BantuanContent() {
         </div>
       )}
 
-      
       <div>
         <Link
           href="/anak"
           id="btn-back-bantuan-anak"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-          <span>Kembali ke Pemantauan</span>
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
+          <span>Kembali ke Beranda</span>
         </Link>
       </div>
 
-      
       <div className="space-y-1">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
           Titip Bantuan Jarak Jauh
@@ -172,63 +173,68 @@ function BantuanContent() {
         </p>
       </div>
 
-      
       {isSuccess && (
-        <div className="bg-[#00624E] text-white p-4 sm:p-5 rounded-3xl shadow-sm flex items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
+        <div className="bg-[#00624E] text-white p-4 sm:p-5 rounded-3xl shadow-sm flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 animate-in fade-in slide-in-from-top-2">
           <div className="flex items-center gap-3.5">
             <div className="w-10 h-10 rounded-2xl bg-white/20 flex items-center justify-center flex-shrink-0">
               <Check className="w-5 h-5 text-white stroke-[3]" />
             </div>
             <div>
-              <p className="font-black text-sm">Titipan Berhasil Diteruskan ke Relawan RT 04</p>
+              <p className="font-black text-sm">Titipan Berhasil Diteruskan ke Relawan RT 04 (Pak Teddy)</p>
               <p className="text-emerald-100 text-xs font-medium mt-0.5">
-                Relawan terdekat telah menerima notifikasi dan sedang memproses titipan Anda.
+                Relawan terdekat telah menerima notifikasi tugas dan sedang menuju Apotek K-24 Gejayan.
               </p>
             </div>
           </div>
-          <button
-            onClick={() => setIsSuccess(false)}
-            className="px-4 py-2 bg-white/20 hover:bg-white/30 text-white font-black text-xs rounded-full transition-all shrink-0 cursor-pointer"
-          >
-            Tutup
-          </button>
+          <div className="flex items-center gap-2 self-end sm:self-center shrink-0">
+            <Link
+              href="/anak/status"
+              className="px-4 py-2 bg-white text-[#00624E] font-black text-xs rounded-xl hover:bg-emerald-50 transition-all shadow-sm flex items-center gap-1.5"
+            >
+              <span>Lacak Pengantaran</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </Link>
+            <button
+              onClick={() => setIsSuccess(false)}
+              className="px-3 py-2 bg-white/20 hover:bg-white/30 text-white font-bold text-xs rounded-xl transition-all cursor-pointer"
+            >
+              Tutup
+            </button>
+          </div>
         </div>
       )}
 
-      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        
         <div className="lg:col-span-7 space-y-6">
 
-          
           <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
-            <div>
-              <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Langkah 1</span>
-              <h2 className="font-black text-slate-900 text-base sm:text-lg leading-tight mt-0.5">
-                Pilih Jenis Bantuan
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#00624E] text-white font-black text-xs flex items-center justify-center">
+                1
+              </span>
+              <h2 className="font-black text-slate-900 text-base sm:text-lg">
+                Pilih Kebutuhan
               </h2>
             </div>
 
-            
-            <div className="grid grid-cols-2 gap-3.5 sm:gap-4">
+            <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {BANTUAN_LIST.map((item) => {
                 const isSelected = selectedKategori === item.id;
                 return (
                   <button
                     type="button"
                     key={item.id}
+                    id={`bantuan-${item.id}`}
                     onClick={() => setSelectedKategori(item.id)}
-                    className={`group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl sm:rounded-3xl text-left transition-all duration-200 min-h-[130px] sm:min-h-[140px] cursor-pointer active:scale-[0.98] ${
+                    className={`group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl text-left transition-all duration-200 min-h-[140px] sm:min-h-[155px] active:scale-[0.98] cursor-pointer ${
                       isSelected
-                        ? "bg-[#E6F4EA] border-2 border-[#00624E] shadow-sm"
-                        : "bg-white hover:bg-slate-50 border border-slate-200/80 hover:border-slate-300 shadow-2xs"
+                        ? "bg-[#E6F4EA] border-[2.5px] border-[#00624E] shadow-sm"
+                        : "bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-2xs"
                     }`}
                   >
                     <div className="flex items-center justify-between w-full">
-                      <div className={`w-12 h-12 rounded-2xl flex items-center justify-center transition-transform group-hover:scale-105 ${
-                        isSelected ? "bg-white text-[#00624E] shadow-2xs" : `${item.iconBg}`
-                      }`}>
+                      <div className={`w-12 h-12 sm:w-14 sm:h-14 rounded-2xl flex items-center justify-center ${item.containerBg} ${item.iconColor} shadow-2xs group-hover:scale-105 transition-transform`}>
                         {item.icon}
                       </div>
 
@@ -243,7 +249,7 @@ function BantuanContent() {
                       <p className={`font-black text-sm sm:text-base leading-tight ${isSelected ? "text-[#00624E]" : "text-slate-900"}`}>
                         {item.label}
                       </p>
-                      <p className={`text-xs font-medium mt-0.5 ${isSelected ? "text-emerald-900/80" : "text-slate-400"}`}>
+                      <p className={`text-xs font-medium mt-0.5 ${isSelected ? "text-emerald-900/80" : "text-slate-500"}`}>
                         {item.desc}
                       </p>
                     </div>
@@ -253,27 +259,68 @@ function BantuanContent() {
             </div>
           </div>
 
-          
           <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
-            <div>
-              <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Langkah 2</span>
-              <h2 className="font-black text-slate-900 text-base sm:text-lg leading-tight mt-0.5">
-                Tulis Detail Kebutuhan Orang Tua
+            <div className="flex items-center gap-2">
+              <span className="w-6 h-6 rounded-full bg-[#00624E] text-white font-black text-xs flex items-center justify-center">
+                2
+              </span>
+              <h2 className="font-black text-slate-900 text-base sm:text-lg">
+                Sampaikan Detail Bantuan
               </h2>
             </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               
-              
+              <div className="space-y-1.5">
+                <label className="text-xs font-bold text-slate-500">Target Orang Tua yang Menerima:</label>
+                <div className="grid grid-cols-2 gap-2.5">
+                  <button
+                    type="button"
+                    onClick={() => setTargetOrtu("prabowo")}
+                    className={`p-3 rounded-2xl border text-left transition-all active:scale-95 cursor-pointer ${
+                      targetOrtu === "prabowo"
+                        ? "bg-[#E6F4EA] border-[#00624E] shadow-2xs"
+                        : "bg-slate-50 border-slate-200/80 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className={`font-black text-xs sm:text-sm ${targetOrtu === "prabowo" ? "text-[#00624E]" : "text-slate-900"}`}>
+                        Bapak Prabowo
+                      </p>
+                      {targetOrtu === "prabowo" && <Check className="w-4 h-4 text-[#00624E] stroke-[3]" />}
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">Blok C4 No. 12 (Sleman)</p>
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() => setTargetOrtu("lestari")}
+                    className={`p-3 rounded-2xl border text-left transition-all active:scale-95 cursor-pointer ${
+                      targetOrtu === "lestari"
+                        ? "bg-[#E6F4EA] border-[#00624E] shadow-2xs"
+                        : "bg-slate-50 border-slate-200/80 hover:bg-slate-100"
+                    }`}
+                  >
+                    <div className="flex items-center justify-between">
+                      <p className={`font-black text-xs sm:text-sm ${targetOrtu === "lestari" ? "text-[#00624E]" : "text-slate-900"}`}>
+                        Ibu Lestari
+                      </p>
+                      {targetOrtu === "lestari" && <Check className="w-4 h-4 text-[#00624E] stroke-[3]" />}
+                    </div>
+                    <p className="text-[11px] text-slate-500 font-medium mt-0.5">Blok C4 No. 12 (Sleman)</p>
+                  </button>
+                </div>
+              </div>
+
               <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-[#E6F4EA] border border-emerald-200 text-[#00624E] text-xs font-black shadow-2xs">
-                <span>Pilihan: {selectedItem.label} ({selectedItem.desc})</span>
+                <span>Kebutuhan: {selectedItem.label} ({selectedItem.desc})</span>
               </div>
 
               <textarea
                 required
                 value={catatan}
                 onChange={(e) => setCatatan(e.target.value)}
-                placeholder="Contoh: Tolong belikan susu Diabetasol rasa vanila 1 kotak dan obat Amlodipine 5mg di Apotek Kimia Farma depan gang..."
+                placeholder="Contoh: Tolong belikan Amlodipin 5mg satu strip di Apotek K-24 Gejayan..."
                 rows={4}
                 className="w-full bg-slate-50 border border-slate-200 rounded-2xl p-4 text-slate-900 text-sm placeholder:text-slate-400 resize-none focus:bg-white focus:border-[#00624E] focus:ring-2 focus:ring-emerald-100 focus:outline-none transition-all font-medium leading-relaxed"
               />
@@ -287,7 +334,7 @@ function BantuanContent() {
                 type="submit"
                 className="w-full py-4 rounded-2xl font-black text-sm sm:text-base text-white shadow-sm bg-[#00624E] hover:bg-[#004d3d] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
               >
-                <span>Kirim Titipan Bantuan Sekarang</span>
+                <span>Kirim Permintaan ke RT 04</span>
                 <ArrowRight className="w-4 h-4 stroke-[2.5]" />
               </button>
             </form>
@@ -295,7 +342,6 @@ function BantuanContent() {
 
         </div>
 
-        
         <div className="lg:col-span-5 space-y-6">
 
           <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">

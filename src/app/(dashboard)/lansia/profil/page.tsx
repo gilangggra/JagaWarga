@@ -81,9 +81,9 @@ export default function ProfilPage() {
         <Link
           href="/lansia"
           id="btn-back-profil"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
@@ -257,6 +257,14 @@ export default function ProfilPage() {
                 </h3>
                 <p className="text-xs text-slate-400 font-medium">Penting diketahui oleh relawan saat membelikan obat</p>
               </div>
+            </div>
+
+            <div className="p-3.5 rounded-2xl bg-[#E6F4EA]/70 border border-emerald-200/90 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+              <div className="flex items-center gap-2">
+                <Shield className="w-4 h-4 text-[#00624E] shrink-0" />
+                <span className="font-black text-[#00624E]">Status: Terverifikasi (Proxy Fill)</span>
+              </div>
+              <span className="text-[11px] text-slate-500 font-medium">Dikelola oleh Titiek (Anak) &amp; Kader Posyandu RT 04</span>
             </div>
 
             <div className="space-y-4">

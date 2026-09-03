@@ -7,7 +7,6 @@ import {
   Clock, 
   CheckCircle2, 
   Phone, 
-  Star, 
   ChevronDown, 
   ChevronUp, 
   Pill, 
@@ -18,7 +17,9 @@ import {
   User, 
   Calendar,
   ArrowRight,
-  MessageSquare
+  Check,
+  FileText,
+  Bell
 } from "lucide-react";
 
 interface RiwayatItemAnak {
@@ -31,9 +32,14 @@ interface RiwayatItemAnak {
   tanggal: string;
   waktu: string;
   status: "selesai" | "dibatalkan";
-  rating?: number;
   total?: string;
+  sumberDana?: string;
   detail: string[];
+  struk?: {
+    toko: string;
+    nomor: string;
+    catatan: string;
+  };
 }
 
 const RIWAYAT_DATA_ANAK: RiwayatItemAnak[] = [
@@ -47,13 +53,18 @@ const RIWAYAT_DATA_ANAK: RiwayatItemAnak[] = [
     tanggal: "Rabu, 26 Mei 2024",
     waktu: "08:45 WIB",
     status: "selesai",
-    rating: 5,
     total: "Rp 87.500",
+    sumberDana: "Lunas via QRIS oleh Anda",
     detail: [
       "Amlodipin 5mg — 30 tablet",
       "Metformin 500mg — 30 tablet",
       "Vitamin D3 — 1 botol",
     ],
+    struk: {
+      toko: "Apotek K-24 Gejayan",
+      nomor: "STR-08241",
+      catatan: "Resep obat rutin telah ditebus lengkap & dicocokkan dengan resep dokter"
+    }
   },
   {
     id: "2",
@@ -65,9 +76,14 @@ const RIWAYAT_DATA_ANAK: RiwayatItemAnak[] = [
     tanggal: "Selasa, 25 Mei 2024",
     waktu: "07:30 WIB",
     status: "selesai",
-    rating: 4,
     total: "Rp 32.000",
+    sumberDana: "Lunas via QRIS oleh Anda",
     detail: ["Bayam 1 ikat", "Wortel 1/2 kg", "Tahu putih 4 buah", "Tempe 2 buah"],
+    struk: {
+      toko: "Warung Sayur Bu Marmi",
+      nomor: "NOTA-142",
+      catatan: "Sayuran segar diantar langsung ke teras rumah Bapak"
+    }
   },
   {
     id: "3",
@@ -79,8 +95,8 @@ const RIWAYAT_DATA_ANAK: RiwayatItemAnak[] = [
     tanggal: "Senin, 20 Mei 2024",
     waktu: "09:00 WIB",
     status: "selesai",
-    rating: 5,
     total: "Gratis Kas RT",
+    sumberDana: "Dana Kas RT 04 (Bebas Biaya)",
     detail: [
       "Cek tensi: 125/80 mmHg",
       "Cek gula darah: 108 mg/dL",
@@ -97,21 +113,28 @@ const RIWAYAT_DATA_ANAK: RiwayatItemAnak[] = [
     tanggal: "Kamis, 16 Mei 2024",
     waktu: "14:15 WIB",
     status: "selesai",
-    rating: 5,
     total: "Rp 24.000",
+    sumberDana: "Lunas via QRIS oleh Anda",
     detail: ["Paracetamol 500mg — 10 tablet", "Antasida — 1 strip"],
+    struk: {
+      toko: "Apotek Kimia Farma Kaliurang",
+      nomor: "STR-07119",
+      catatan: "Obat pertolongan pertama keluhan lambung"
+    }
   },
   {
     id: "5",
     kategori: "rumah",
     judul: "Kunjungan & Cek Rumah",
-    deskripsi: "Cek kondisi fisik & perbaikan atap",
+    deskripsi: "Cek kondisi fisik & kelistrikan rumah",
     untuk: "Bapak Prabowo",
     relawan: "Pak Joko",
     tanggal: "Senin, 13 Mei 2024",
     waktu: "10:00 WIB",
     status: "dibatalkan",
-    detail: ["Jadwal ditunda karena hujan lebat", "Dijadwalkan ulang minggu berikutnya"],
+    total: "Tidak Ada Biaya",
+    sumberDana: "Jadwal dialihkan",
+    detail: ["Jadwal ditunda karena hujan lebat", "Dijadwalkan ulang minggu berikutnya tanpa biaya"],
   },
 ];
 
@@ -150,44 +173,64 @@ const RELAWAN_HIGHLIGHT = [
 
 export default function RiwayatAnakPage() {
   const [filter, setFilter] = useState<"semua" | "obat" | "sayur" | "kontrol" | "rumah">("semua");
+  const [parentFilter, setParentFilter] = useState<"semua" | "prabowo" | "lestari">("semua");
   const [expandedId, setExpandedId] = useState<string | null>(null);
 
-  const filtered = filter === "semua" ? RIWAYAT_DATA_ANAK : RIWAYAT_DATA_ANAK.filter((r) => r.kategori === filter);
+  const filtered = RIWAYAT_DATA_ANAK.filter((r) => {
+    const matchCat = filter === "semua" || r.kategori === filter;
+    const matchParent = 
+      parentFilter === "semua" || 
+      (parentFilter === "prabowo" && r.untuk.includes("Prabowo")) ||
+      (parentFilter === "lestari" && r.untuk.includes("Lestari"));
+    return matchCat && matchParent;
+  });
+
   const totalSelesai = RIWAYAT_DATA_ANAK.filter((r) => r.status === "selesai").length;
   const totalRelawan = [...new Set(RIWAYAT_DATA_ANAK.map((r) => r.relawan))].length;
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 font-sans pb-36 sm:pb-32 lg:pb-12 bg-[#F8FAFC]">
       
-      
-      <div>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <Link
           href="/anak"
           id="btn-back-riwayat-anak"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 self-start group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-          <span>Kembali ke Pemantauan</span>
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
+          <span>Kembali ke Beranda</span>
         </Link>
+
+        <div className="flex items-center gap-3 self-start sm:self-auto">
+          <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-slate-200/90 text-xs font-black text-slate-700 shadow-2xs">
+            <div className="w-6 h-6 rounded-full bg-emerald-100 text-[#00624E] flex items-center justify-center">
+              <User className="w-3.5 h-3.5" />
+            </div>
+            <span>Dimas Prasetyo (Wali)</span>
+          </div>
+
+          <div className="w-9 h-9 rounded-full bg-white border border-slate-200/90 flex items-center justify-center text-slate-600 shadow-2xs relative">
+            <Bell className="w-4 h-4" />
+            <span className="w-2 h-2 rounded-full bg-emerald-500 absolute top-1.5 right-1.5 ring-2 ring-white" />
+          </div>
+        </div>
       </div>
 
-      
       <div className="space-y-1">
         <div className="flex items-center gap-2">
           <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-[#00624E] bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 rounded-full">
-            Laporan Gotong Royong
+            Laporan Gotong Royong Warga
           </span>
-          <span className="text-xs text-slate-400 font-bold">• Posko RT 04 Condongcatur</span>
+          <span className="text-xs text-slate-400 font-bold">• Posko RT 04 Sleman</span>
         </div>
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-          Riwayat Titipan &amp; Bantuan
+          Riwayat Bantuan &amp; Titipan
         </h1>
         <p className="text-sm sm:text-base font-medium text-slate-500">
-          Catatan lengkap bantuan dan laporan serah terima yang telah dilaksanakan relawan untuk orang tua.
+          Catatan lengkap pertolongan dan laporan serah terima gotong royong warga RT 04 untuk orang tua Anda.
         </p>
       </div>
 
-      
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-5">
         <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs flex items-center justify-between">
           <div>
@@ -215,7 +258,7 @@ export default function RiwayatAnakPage() {
           <div>
             <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">Relawan Terlibat</span>
             <p className="text-2xl sm:text-3xl font-black text-[#00624E] mt-0.5">{totalRelawan}</p>
-            <p className="text-xs text-slate-500 font-bold mt-0.5">Warga tetangga siaga</p>
+            <p className="text-xs text-slate-500 font-bold mt-0.5">Tetangga siaga RT</p>
           </div>
           <div className="w-12 h-12 rounded-2xl bg-[#E6F4EA] text-[#00624E] flex items-center justify-center font-black shadow-2xs">
             <User className="w-6 h-6 stroke-[2.2]" />
@@ -223,33 +266,67 @@ export default function RiwayatAnakPage() {
         </div>
       </div>
 
-      
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
+          {(["semua", "obat", "sayur", "kontrol", "rumah"] as const).map((f) => (
+            <button
+              key={f}
+              onClick={() => setFilter(f)}
+              className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all border shrink-0 cursor-pointer active:scale-95 ${
+                filter === f
+                  ? "bg-[#00624E] text-white border-[#00624E] shadow-sm shadow-emerald-600/20"
+                  : "bg-white text-slate-600 border-slate-200/80 hover:border-emerald-300 hover:text-[#00624E]"
+              }`}
+            >
+              {f === "semua" ? "Semua Kategori" :
+               f === "obat" ? "Beli Obat" :
+               f === "sayur" ? "Belanja Sayur" :
+               f === "kontrol" ? "Teman Kontrol" : "Kunjungan Rumah"}
+            </button>
+          ))}
+        </div>
+
+        <div className="flex items-center gap-1.5 p-1 bg-white border border-slate-200/80 rounded-2xl shadow-2xs self-start sm:self-auto">
+          <button
+            type="button"
+            onClick={() => setParentFilter("semua")}
+            className={`px-3 py-1.5 text-xs font-black rounded-xl transition-all ${
+              parentFilter === "semua"
+                ? "bg-[#00624E] text-white"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Semua Ortu
+          </button>
+          <button
+            type="button"
+            onClick={() => setParentFilter("prabowo")}
+            className={`px-3 py-1.5 text-xs font-black rounded-xl transition-all ${
+              parentFilter === "prabowo"
+                ? "bg-[#00624E] text-white"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Bapak Prabowo
+          </button>
+          <button
+            type="button"
+            onClick={() => setParentFilter("lestari")}
+            className={`px-3 py-1.5 text-xs font-black rounded-xl transition-all ${
+              parentFilter === "lestari"
+                ? "bg-[#00624E] text-white"
+                : "text-slate-600 hover:text-slate-900"
+            }`}
+          >
+            Ibu Lestari
+          </button>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        
         <div className="lg:col-span-8 space-y-4">
 
-          
-          <div className="flex items-center gap-2 overflow-x-auto pb-1 -mx-1 px-1 scrollbar-none">
-            {(["semua", "obat", "sayur", "kontrol", "rumah"] as const).map((f) => (
-              <button
-                key={f}
-                onClick={() => setFilter(f)}
-                className={`px-4 py-2.5 rounded-2xl text-xs font-black transition-all border shrink-0 cursor-pointer active:scale-95 ${
-                  filter === f
-                    ? "bg-[#00624E] text-white border-[#00624E] shadow-sm shadow-emerald-600/20"
-                    : "bg-white text-slate-600 border-slate-200/80 hover:border-emerald-300 hover:text-[#00624E]"
-                }`}
-              >
-                {f === "semua" ? "Semua Kategori" :
-                 f === "obat" ? "💊 Beli Obat" :
-                 f === "sayur" ? "🛒 Belanja Sayur" :
-                 f === "kontrol" ? "💜 Teman Kontrol" : "🏠 Cek Rumah"}
-              </button>
-            ))}
-          </div>
-
-          
           <div className="space-y-3.5 sm:space-y-4">
             {filtered.map((item) => {
               const cfg = KATEGORI_CONFIG[item.kategori];
@@ -261,19 +338,18 @@ export default function RiwayatAnakPage() {
                 >
                   <button
                     onClick={() => setExpandedId(expanded ? null : item.id)}
-                    className="w-full p-5 sm:p-6 flex items-start gap-4 sm:gap-5 text-left cursor-pointer hover:bg-slate-50/50 transition-colors"
+                    className="w-full p-5 sm:p-6 flex items-start gap-4 sm:gap-5 text-left cursor-pointer hover:bg-slate-50/50 transition-colors group"
                   >
                     
                     <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${cfg.bg} ${cfg.text} flex items-center justify-center shrink-0 shadow-2xs`}>
                       {cfg.icon}
                     </div>
 
-                    
                     <div className="flex-1 min-w-0">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <div className="flex items-center gap-2">
-                            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded-full border border-emerald-200/60">
+                            <span className="text-[10px] font-black uppercase tracking-wider text-emerald-800 bg-emerald-50 px-2.5 py-0.5 rounded-full border border-emerald-200/60">
                               Untuk: {item.untuk}
                             </span>
                           </div>
@@ -282,7 +358,7 @@ export default function RiwayatAnakPage() {
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           {item.status === "selesai" ? (
-                            <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-[#00624E] bg-[#E6F4EA] border border-emerald-200 px-3 py-1 rounded-full">
+                            <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-[#00624E] bg-[#E6F4EA] border border-emerald-200 px-3 py-1 rounded-full shadow-2xs">
                               <CheckCircle2 className="w-3.5 h-3.5" /> Selesai
                             </span>
                           ) : (
@@ -291,7 +367,15 @@ export default function RiwayatAnakPage() {
                             </span>
                           )}
                           {item.total && (
-                            <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5">{item.total}</span>
+                            <div className="text-right mt-0.5">
+                              <span className="text-xs sm:text-sm font-black text-slate-800">{item.total}</span>
+                              {item.sumberDana && (
+                                <span className="flex items-center justify-end gap-1 text-[10.5px] font-bold text-[#00624E] mt-0.5">
+                                  <Check className="w-3 h-3 stroke-[3]" />
+                                  <span>{item.sumberDana}</span>
+                                </span>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -307,30 +391,53 @@ export default function RiwayatAnakPage() {
                         </div>
                       </div>
 
-                      {item.rating && (
-                        <div className="flex items-center gap-1 mt-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < item.rating! ? "text-amber-400 fill-amber-400" : "text-slate-200 fill-slate-200"}`}
-                            />
-                          ))}
-                          <span className="text-xs font-bold text-amber-600 ml-1">Layanan Terverifikasi Baik</span>
+                      {item.status === "selesai" ? (
+                        <div className="flex flex-wrap items-center gap-2 mt-3 pt-2.5 border-t border-slate-100">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200/80 text-[11px] font-bold shadow-2xs">
+                            <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                            <span>Ucapan Terima Kasih Terkirim</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#00624E] border border-emerald-200/80 text-[11px] font-bold shadow-2xs">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#00624E]" />
+                            <span>Gotong Royong Selesai</span>
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-slate-100">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[11px] font-bold">
+                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Jadwal Ditunda Transparan (Hujan Lebat)</span>
+                          </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="shrink-0 text-slate-400 mt-1">
-                      {expanded ? <ChevronUp className="w-5 h-5 text-slate-600" /> : <ChevronDown className="w-5 h-5" />}
+                    <div className="flex items-center gap-2 shrink-0 self-center sm:self-start">
+                      <span className="hidden sm:inline-flex items-center gap-1 text-xs font-black text-[#00624E] bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-100 transition-all shadow-2xs">
+                        <span>{expanded ? "Tutup Rincian" : "Lihat Struk Belanja"}</span>
+                        <ArrowRight className={`w-3.5 h-3.5 transition-transform ${expanded ? "-rotate-90" : "group-hover:translate-x-0.5"}`} />
+                      </span>
+                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:border-slate-300">
+                        {expanded ? <ChevronUp className="w-4 h-4 text-slate-700" /> : <ChevronDown className="w-4 h-4" />}
+                      </div>
                     </div>
                   </button>
 
                   {expanded && (
-                    <div className="px-5 sm:px-6 pb-6 pt-0 border-t border-slate-100 bg-slate-50/50">
+                    <div className="px-5 sm:px-6 pb-6 pt-0 border-t border-slate-100 bg-slate-50/50 space-y-4">
                       <div className="pt-4 space-y-3">
-                        <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">
-                          Rincian Barang / Layanan Titipan
-                        </span>
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">
+                            Rincian Barang / Layanan Titipan
+                          </span>
+                          {item.struk && (
+                            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 px-2.5 py-1 rounded-lg shadow-2xs">
+                              <FileText className="w-3.5 h-3.5 text-[#00624E]" />
+                              <span>{item.struk.toko} ({item.struk.nomor})</span>
+                            </span>
+                          )}
+                        </div>
+
                         <ul className="space-y-2">
                           {item.detail.map((d, i) => (
                             <li key={i} className="flex items-center gap-3 text-sm font-bold text-slate-700 bg-white p-3 rounded-2xl border border-slate-100 shadow-2xs">
@@ -339,7 +446,18 @@ export default function RiwayatAnakPage() {
                             </li>
                           ))}
                         </ul>
-                        <div className="flex items-center justify-between pt-2">
+
+                        {item.struk && (
+                          <div className="p-3.5 bg-emerald-50/80 border border-emerald-200/90 rounded-2xl flex items-start gap-3">
+                            <CheckCircle2 className="w-4 h-4 text-[#00624E] shrink-0 mt-0.5" />
+                            <div className="text-xs">
+                              <p className="font-black text-[#00624E]">Struk Belanja Terverifikasi Relawan</p>
+                              <p className="text-emerald-950 font-medium mt-0.5 leading-relaxed">{item.struk.catatan}. Pembayaran telah diselesaikan via QRIS oleh Anda.</p>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between pt-2 flex-wrap gap-2">
                           <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
                             <Clock className="w-4 h-4 text-[#00624E]" />
                             <span>Waktu Penyerahan: <strong>{item.waktu}</strong></span>
@@ -348,7 +466,7 @@ export default function RiwayatAnakPage() {
                             href="/anak/bantuan"
                             className="text-xs font-black text-[#00624E] hover:underline inline-flex items-center gap-1"
                           >
-                            Titip Bantuan Ulang →
+                            Titip Bantuan Ulang Seperti Ini →
                           </Link>
                         </div>
                       </div>
@@ -361,10 +479,8 @@ export default function RiwayatAnakPage() {
 
         </div>
 
-        
-        <div className="lg:col-span-4 space-y-5 lg:sticky lg:top-24">
+        <div className="lg:col-span-4 space-y-5">
 
-          
           <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
             <div className="flex items-center justify-between pb-3 border-b border-slate-100">
               <div>
@@ -387,20 +503,17 @@ export default function RiwayatAnakPage() {
                     </div>
                   </div>
                   <a
-                    href="https://wa.me/628123456789"
-                    target="_blank"
-                    rel="noreferrer"
-                    className="w-9 h-9 rounded-2xl bg-white text-emerald-600 border border-slate-200 hover:bg-emerald-50 flex items-center justify-center shadow-2xs active:scale-95 transition-all"
+                    href="tel:08123456789"
+                    className="w-9 h-9 rounded-2xl bg-white text-[#00624E] border border-slate-200 hover:bg-emerald-50 flex items-center justify-center shadow-2xs active:scale-95 transition-all"
                     title={`Hubungi ${r.nama}`}
                   >
-                    <MessageSquare className="w-4 h-4" />
+                    <Phone className="w-4 h-4" />
                   </a>
                 </div>
               ))}
             </div>
           </div>
 
-          
           <Link
             href="/anak/bantuan"
             id="btn-titip-lagi-riwayat"

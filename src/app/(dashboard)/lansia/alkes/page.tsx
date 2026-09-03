@@ -15,8 +15,10 @@ import {
   Check, 
   X, 
   ShieldCheck,
-  Info
+  Info,
+  Volume2
 } from "lucide-react";
+import { speakIndonesian } from "@/lib/speak";
 
 interface AlkesItem {
   id: string;
@@ -38,61 +40,80 @@ interface AlkesItem {
 const ALKES_LIST: AlkesItem[] = [
   {
     id: "kursi-roda",
-    nama: "Kursi Roda Lipat Medis",
+    nama: "Kursi Roda Lipat Ringan",
     status: "tersedia",
     badgeText: "2 Tersedia di Pos RT",
     badgeBg: "bg-[#E6F4EA] text-[#00624E] border-[#00624E]/20",
     containerBg: "bg-[#E6F4EA]/60",
     photoSrc: "/alkes-kursi-roda.jpg",
-    desc: "Ringan, mudah dilipat, dengan rem tangan ganda & pijakan kaki.",
+    desc: "Ringan, bisa dilipat masuk mobil untuk kontrol ke dokter atau posyandu.",
     metaText: "Pos RT 04 • Antar < 5 Menit",
     lokasi: "Pos RT 04 (2 Unit)",
     pengantaran: "Siap Antar (< 5 Menit)",
     spesifikasi: [
-      { label: "Material", value: "Aluminium ringan anti-karat" },
-      { label: "Kapasitas Beban", value: "Maks. 120 kg" },
-      { label: "Lebar Dudukan", value: "45 cm ergonomis" },
-      { label: "Kondisi", value: "Bersih, steril & siap pakai" },
+      { label: "Kenyamanan Duduk", value: "Busa empuk dengan sandaran punggung" },
+      { label: "Kemudahan Lipat", value: "Rangka ringan, bisa dilipat masuk mobil" },
+      { label: "Keamanan Rem", value: "Rem tangan ganda di pegangan & roda" },
+      { label: "Biaya Pinjam", value: "Gratis Kas RT (Bebas Biaya)" },
     ],
   },
   {
     id: "tabung-o2",
-    nama: "Tabung Oksigen 1m³ + Regulator",
+    nama: "Tabung Oksigen Siaga Bernapas",
     status: "dipinjam",
     badgeText: "Sedang Dipinjam",
     badgeBg: "bg-amber-50 text-amber-800 border-amber-200",
     containerBg: "bg-amber-50/70",
     photoSrc: "/alkes-tabung-o2.jpg",
-    desc: "Lengkap dengan regulator flow-meter & selang kanula steril baru.",
+    desc: "Tabung oksigen darurat siap pakai dengan selang kanula steril baru.",
     metaText: "Dipinjam: Bu Siti (Blok D2) • Kembali: Besok",
     lokasi: "Blok D2 (Sedang digunakan)",
     pengantaran: "Antre Pengembalian",
     peminjam: "Bu Siti (Blok D2)",
     kembali: "Besok Sore (16:00 WIB)",
     spesifikasi: [
-      { label: "Kapasitas Tabung", value: "1 m³ (isi penuh)" },
-      { label: "Regulator", value: "Flow-meter 0-15 L/min" },
+      { label: "Kesiapan Oksigen", value: "Gas oksigen medis murni terisi penuh" },
+      { label: "Perlengkapan", value: "Regulator & selang kanula steril baru" },
       { label: "Peminjam Saat Ini", value: "Ibu Siti (Blok D2, No. 04)" },
       { label: "Estimasi Kembali", value: "Besok Sore (16:00 WIB)" },
     ],
   },
   {
+    id: "alat-tensi",
+    nama: "Alat Cek Tensi Darah Otomatis",
+    status: "tersedia",
+    badgeText: "2 Tersedia di Pos RT",
+    badgeBg: "bg-[#E6F4EA] text-[#00624E] border-[#00624E]/20",
+    containerBg: "bg-[#E6F4EA]/60",
+    photoSrc: "/alkes-tensimeter.jpg",
+    desc: "Cukup pasang manset di lengan dan pencet satu tombol, tensi langsung terbaca.",
+    metaText: "Pos RT 04 • Antar < 5 Menit",
+    lokasi: "Pos RT 04 (2 Unit)",
+    pengantaran: "Siap Antar (< 5 Menit)",
+    spesifikasi: [
+      { label: "Cara Pakai Praktis", value: "Cukup pasang di lengan & pencet tombol start" },
+      { label: "Tampilan Layar", value: "Layar digital angka besar & jelas terbaca" },
+      { label: "Pemeriksaan", value: "Mendeteksi tekanan darah & detak jantung" },
+      { label: "Biaya Pinjam", value: "Gratis Kas RT (Bebas Biaya)" },
+    ],
+  },
+  {
     id: "tongkat",
-    nama: "Tongkat Jalan Kaki Empat",
+    nama: "Tongkat Kaki Empat Kokoh",
     status: "tersedia",
     badgeText: "3 Tersedia di Pos RT",
     badgeBg: "bg-[#E6F4EA] text-[#00624E] border-[#00624E]/20",
     containerBg: "bg-[#E6F4EA]/60",
     photoSrc: "/alkes-tongkat-jalan.jpg",
-    desc: "Tinggi dapat disetel 10 level, 4 kaki karet anti-selip kokoh.",
+    desc: "Sangat stabil untuk menyangga langkah kaki, dengan 4 karet anti-peleset.",
     metaText: "Pos RT 04 • Antar < 5 Menit",
     lokasi: "Pos RT 04 (3 Unit)",
     pengantaran: "Siap Antar (< 5 Menit)",
     spesifikasi: [
-      { label: "Material", value: "Aluminium Anodized" },
-      { label: "Pengaturan Tinggi", value: "76 - 101 cm (10 tingkat)" },
-      { label: "Kaki Penyangga", value: "4 titik karet anti-selip" },
-      { label: "Kondisi", value: "Kokoh, terawat & steril" },
+      { label: "Kestabilan", value: "Paling stabil menyangga tubuh saat berjalan" },
+      { label: "Tinggi Tongkat", value: "Bisa disetel pas dengan tinggi badan Bapak" },
+      { label: "Ujung Kaki", value: "4 bantalan karet tebal anti-licin" },
+      { label: "Kondisi Alat", value: "Bersih, kokoh, dan langsung siap pakai" },
     ],
   },
 ];
@@ -122,21 +143,34 @@ export default function AlkesPage() {
         <Link
           href="/lansia"
           id="btn-back-alkes"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
 
       
-      <div className="space-y-1">
-        <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
-          Pinjam Alkes Kas RT 04
-        </h1>
-        <p className="text-sm sm:text-base font-medium text-slate-500">
-          Fasilitas alat kesehatan gratis untuk warga, siap diantar relawan dalam &lt;5 menit.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+        <div className="space-y-1">
+          <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
+            Pinjam Alkes Kas RT 04
+          </h1>
+          <p className="text-sm sm:text-base font-medium text-slate-500">
+            Fasilitas alat kesehatan gratis untuk warga, siap diantar relawan dalam &lt;5 menit.
+          </p>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => {
+            speakIndonesian("Peminjaman Alat Kesehatan Kas RT 04. Tersedia Kursi Roda Lipat Ringan, Tabung Oksigen Siaga Bernapas, Alat Cek Tensi Darah Otomatis, dan Tongkat Kaki Empat. Seluruh alat gratis dan siap diantar relawan siaga ke rumah Bapak.");
+          }}
+          className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-[#00624E] border border-emerald-200 text-xs sm:text-sm font-black transition-all active:scale-95 shadow-2xs self-start sm:self-auto cursor-pointer"
+        >
+          <Volume2 className="w-4 h-4" />
+          <span>Dengarkan Panduan Suara</span>
+        </button>
       </div>
 
       
@@ -186,7 +220,7 @@ export default function AlkesPage() {
       )}
 
       
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5 sm:gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 sm:gap-7">
         {ALKES_LIST.map((alkes) => {
           const isTersedia = alkes.status === "tersedia";
 
@@ -216,7 +250,7 @@ export default function AlkesPage() {
                 
                 <div
                   onClick={() => setDetailAlkes(alkes)}
-                  className={`w-full h-44 sm:h-48 rounded-2xl ${alkes.containerBg} flex items-center justify-center p-3 relative overflow-hidden cursor-pointer group transition-transform duration-300 active:scale-[0.99]`}
+                  className={`w-full h-48 sm:h-52 rounded-2xl ${alkes.containerBg} flex items-center justify-center p-3 relative overflow-hidden cursor-pointer group transition-transform duration-300 active:scale-[0.99]`}
                 >
                   <div className="relative w-full h-full rounded-xl overflow-hidden shadow-2xs">
                     <Image
@@ -226,7 +260,7 @@ export default function AlkesPage() {
                       className={`object-cover transition-transform duration-300 group-hover:scale-105 ${
                         !isTersedia ? "grayscale-[0.3] opacity-90" : ""
                       }`}
-                      sizes="(max-width: 768px) 100vw, 380px"
+                      sizes="(max-width: 768px) 100vw, 550px"
                     />
                   </div>
                 </div>
@@ -236,7 +270,7 @@ export default function AlkesPage() {
                   <h3 className="font-black text-slate-900 text-base sm:text-lg leading-snug">
                     {alkes.nama}
                   </h3>
-                  <p className="text-slate-500 text-xs font-medium leading-relaxed">
+                  <p className="text-slate-500 text-xs sm:text-sm font-medium leading-relaxed">
                     {alkes.desc}
                   </p>
                 </div>
@@ -244,25 +278,25 @@ export default function AlkesPage() {
                 
                 <div className="pt-1">
                   {isTersedia ? (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-600 w-full justify-between">
-                      <span className="flex items-center gap-1.5 text-slate-700">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-slate-50 border border-slate-100 text-xs font-semibold text-slate-600 w-full justify-between">
+                      <span className="flex items-center gap-1.5 text-slate-700 font-bold">
                         <MapPin className="w-3.5 h-3.5 text-[#00624E]" />
                         <span>Pos RT 04</span>
                       </span>
                       <span className="text-slate-300">•</span>
-                      <span className="flex items-center gap-1.5 font-bold text-[#00624E]">
+                      <span className="flex items-center gap-1.5 font-black text-[#00624E]">
                         <Zap className="w-3.5 h-3.5 fill-[#00624E]" />
                         <span>Antar &lt; 5 Menit</span>
                       </span>
                     </div>
                   ) : (
-                    <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-xl bg-amber-50/70 border border-amber-100 text-xs font-semibold text-amber-900 w-full justify-between">
-                      <span className="flex items-center gap-1.5 truncate">
+                    <div className="inline-flex items-center gap-2 px-3.5 py-2 rounded-xl bg-amber-50/70 border border-amber-200/90 text-xs font-semibold text-amber-900 w-full justify-between">
+                      <span className="flex items-center gap-1.5 truncate font-bold text-amber-950">
                         <User className="w-3.5 h-3.5 text-amber-700 shrink-0" />
                         <span className="truncate">Bu Siti (Blok D2)</span>
                       </span>
                       <span className="text-amber-300">•</span>
-                      <span className="flex items-center gap-1.5 font-bold text-amber-800 shrink-0">
+                      <span className="flex items-center gap-1.5 font-black text-amber-900 shrink-0">
                         <Calendar className="w-3.5 h-3.5 text-amber-700" />
                         <span>Kembali: Besok</span>
                       </span>
@@ -276,17 +310,19 @@ export default function AlkesPage() {
                 {isTersedia ? (
                   <button
                     onClick={() => setSelectedAlkes(alkes)}
-                    className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm text-white shadow-sm bg-[#00624E] hover:bg-[#004d3d] active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm text-white shadow-sm bg-[#00624E] hover:bg-[#004d3d] active:scale-[0.98] transition-all flex items-center justify-center gap-2 cursor-pointer"
                   >
                     <span>Ajukan Pinjam Gratis</span>
                     <ArrowRight className="w-4 h-4 stroke-[2.5]" />
                   </button>
                 ) : (
                   <button
+                    type="button"
+                    id="btn-ingatkan-alkes"
                     onClick={() => handleSetReminder(alkes.nama)}
-                    className="w-full py-3.5 rounded-2xl font-bold text-xs sm:text-sm text-amber-900 bg-amber-50 hover:bg-amber-100 border border-amber-200 shadow-2xs active:scale-[0.98] transition-all flex items-center justify-center gap-2"
+                    className="w-full py-3.5 rounded-2xl font-black text-xs sm:text-sm text-[#78350F] bg-[#FEF3C7] hover:bg-[#FDE68A] border-2 border-[#F59E0B]/70 shadow-xs active:scale-[0.98] transition-all flex items-center justify-center gap-2.5 cursor-pointer"
                   >
-                    <Bell className="w-4 h-4 text-amber-700" />
+                    <Bell className="w-4 h-4 text-[#92400E] stroke-[2.5]" />
                     <span>Ingatkan Saat Tersedia</span>
                   </button>
                 )}
@@ -311,12 +347,12 @@ export default function AlkesPage() {
             </p>
           </div>
         </div>
-        <Link
-          href="/lansia"
-          className="w-full sm:w-auto px-5 py-2.5 rounded-2xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition-all text-center shrink-0"
+        <a
+          href="tel:08123456788"
+          className="w-full sm:w-auto px-6 py-3 rounded-2xl bg-slate-900 hover:bg-slate-800 text-white font-black text-xs sm:text-sm shadow-sm transition-all text-center shrink-0 active:scale-95"
         >
           Hubungi Pengurus RT
-        </Link>
+        </a>
       </div>
 
       
@@ -408,13 +444,26 @@ export default function AlkesPage() {
             </div>
 
             <div className="overflow-y-auto flex-1 p-5 sm:p-6 space-y-4">
-              <div>
-                <h3 className="font-black text-slate-900 text-lg leading-tight">{detailAlkes.nama}</h3>
-                <p className="text-slate-500 text-xs font-medium mt-1 leading-relaxed">{detailAlkes.desc}</p>
+              <div className="flex items-center justify-between gap-3">
+                <div className="min-w-0">
+                  <h3 className="font-black text-slate-900 text-lg leading-tight truncate">{detailAlkes.nama}</h3>
+                  <p className="text-slate-500 text-xs font-medium mt-1 leading-relaxed">{detailAlkes.desc}</p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => {
+                    const speechText = `${detailAlkes.nama}. ${detailAlkes.desc}. ${detailAlkes.spesifikasi.map((s) => s.label + ': ' + s.value).join('. ')}`;
+                    speakIndonesian(speechText);
+                  }}
+                  className="p-3 rounded-2xl bg-emerald-50 hover:bg-emerald-100 text-[#00624E] border border-emerald-200 transition-all shrink-0 cursor-pointer shadow-2xs active:scale-95"
+                  title="Dengarkan Suara"
+                >
+                  <Volume2 className="w-5 h-5" />
+                </button>
               </div>
 
               <div className="bg-[#F8FAFC] border border-slate-200/80 rounded-2xl p-4 space-y-2.5">
-                <p className="text-[10px] font-black uppercase tracking-widest text-slate-400">Spesifikasi Teknis</p>
+                <p className="text-[10px] font-black uppercase tracking-widest text-[#00624E]">Manfaat &amp; Kemudahan Pakai</p>
                 {detailAlkes.spesifikasi.map((spec) => (
                   <div key={spec.label} className="flex items-start justify-between gap-3 text-xs">
                     <span className="text-slate-400 font-medium flex-shrink-0">{spec.label}</span>

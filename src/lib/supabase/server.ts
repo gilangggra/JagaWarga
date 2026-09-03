@@ -18,8 +18,6 @@ export async function createClient() {
               cookieStore.set(name, value, options)
             );
           } catch {
-            // setAll dipanggil dari Server Component — bisa diabaikan
-            // jika middleware sudah menangani refresh sesi.
           }
         },
       },

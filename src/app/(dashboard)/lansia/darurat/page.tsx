@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState, useEffect, useRef } from "react";
+import { ArrowLeft } from "lucide-react";
 
 const COUNTDOWN_SECONDS = 4;
 
@@ -46,11 +47,10 @@ export default function DaruratPage() {
         <Link
           href="/lansia"
           id="btn-back-darurat"
-          className="inline-flex p-2 rounded-xl bg-red-500/50 hover:bg-red-500/70 transition-colors"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white text-slate-800 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-md transition-all active:scale-95 group"
         >
-          <svg viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth={2} className="w-6 h-6">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5 3 12m0 0 7.5-7.5M3 12h18" />
-          </svg>
+          <ArrowLeft className="w-4 h-4 text-slate-500 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
+          <span>Kembali ke Beranda</span>
         </Link>
       </div>
 

@@ -17,19 +17,7 @@ import {
   Zap
 } from "lucide-react";
 
-function speakPrompt(text: string) {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "id-ID";
-      utterance.rate = 0.92;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-    }
-  }
-}
+import { speakIndonesian } from "@/lib/speak";
 
 const BANTUAN_LIST = [
   {
@@ -101,49 +89,70 @@ function BantuanContent() {
   const [voiceText, setVoiceText] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  const [recordSeconds, setRecordSeconds] = useState(30);
+
   const selectedItem = BANTUAN_LIST.find((b) => b.id === selected) ?? BANTUAN_LIST[0];
 
   useEffect(() => {
-    if (!isRecording) return;
+    if (!isRecording) {
+      setRecordSeconds(30);
+      return;
+    }
     setVoiceStep("listening");
     setVoiceText("");
+    setRecordSeconds(30);
+
+    const interval = setInterval(() => {
+      setRecordSeconds((prev) => {
+        if (prev <= 1) {
+          clearInterval(interval);
+          setVoiceStep("transcribed");
+          setVoiceText(VOICE_SAMPLE_TEXTS[selected] ?? "Tolong bantu kebutuhan saya, terima kasih relawan RT.");
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
     const t = setTimeout(() => {
       setVoiceStep("transcribed");
       setVoiceText(VOICE_SAMPLE_TEXTS[selected] ?? "Tolong bantu kebutuhan saya, terima kasih relawan RT.");
-    }, 2200);
-    return () => clearTimeout(t);
+    }, 3200);
+
+    return () => {
+      clearTimeout(t);
+      clearInterval(interval);
+    };
   }, [isRecording, selected]);
 
   const handleKirim = () => {
     if (!selected) return;
     setIsSubmitting(true);
-    speakPrompt(`Permintaan ${selectedItem.label} berhasil dikirim ke relawan terdekat.`);
+    speakIndonesian(`Permintaan ${selectedItem.label} berhasil dikirim ke relawan terdekat.`);
     setTimeout(() => router.push("/lansia/status"), 600);
   };
 
   const handleSendVoice = () => {
     setIsRecording(false);
     setIsSubmitting(true);
-    speakPrompt(`Permintaan suara ${selectedItem.label} berhasil dikirim ke relawan terdekat.`);
+    speakIndonesian(`Permintaan suara ${selectedItem.label} berhasil dikirim ke relawan terdekat.`);
     setTimeout(() => router.push("/lansia/status"), 600);
   };
 
   return (
     <div className="w-full max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5 sm:py-8 space-y-6 sm:space-y-8 font-sans pb-32 lg:pb-12 bg-[#F8FAFC]">
 
-      
       <div>
         <Link
           href="/lansia"
           id="btn-back-bantuan"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
 
-      
       <div className="space-y-1">
         <h1 className="text-2xl sm:text-3xl lg:text-4xl font-black text-slate-900 tracking-tight leading-tight">
           Minta Bantuan Warga
@@ -153,13 +162,10 @@ function BantuanContent() {
         </p>
       </div>
 
-      
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-        
         <div className="lg:col-span-7 space-y-6">
 
-          
           <div className="bg-white rounded-3xl border border-slate-200/80 p-5 sm:p-6 shadow-xs space-y-4">
             
             <div className="flex items-center justify-between">
@@ -174,15 +180,14 @@ function BantuanContent() {
 
               <button
                 type="button"
-                onClick={() => speakPrompt("Pilihan kebutuhan: Beli Obat, Beli Sayur, Teman Jalan, dan Pinjam Alkes.")}
-                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-black transition-all border border-sky-200 active:scale-95"
+                onClick={() => speakIndonesian("Pilihan kebutuhan: Beli Obat, Beli Sayur, Teman Jalan, dan Pinjam Alkes.")}
+                className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-sky-50 hover:bg-sky-100 text-sky-800 text-xs font-black transition-all border border-sky-200 active:scale-95 cursor-pointer"
               >
                 <Volume2 className="w-3.5 h-3.5 text-sky-700" />
                 <span>Panduan Suara</span>
               </button>
             </div>
 
-            
             <div className="grid grid-cols-2 gap-3 sm:gap-4">
               {BANTUAN_LIST.map((item) => {
                 const isSelected = selected === item.id;
@@ -193,9 +198,9 @@ function BantuanContent() {
                     id={`bantuan-${item.id}`}
                     onClick={() => {
                       setSelected(item.id);
-                      speakPrompt(item.speakText);
+                      speakIndonesian(item.speakText);
                     }}
-                    className={`group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl text-left transition-all duration-200 min-h-[140px] sm:min-h-[155px] active:scale-[0.98] ${
+                    className={`group relative flex flex-col justify-between p-4 sm:p-5 rounded-2xl text-left transition-all duration-200 min-h-[140px] sm:min-h-[155px] active:scale-[0.98] cursor-pointer ${
                       isSelected
                         ? "bg-[#E6F4EA] border-[2.5px] border-[#00624E] shadow-sm"
                         : "bg-white border border-slate-200/80 hover:border-slate-300 hover:shadow-2xs"
@@ -398,23 +403,36 @@ function BantuanContent() {
             </div>
 
             <div>
-              <span className="inline-block px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-black mb-1.5">
-                {voiceStep === "listening" ? "Mendengarkan..." : "Suara Dicatat"}
-              </span>
+              <div className="flex items-center justify-between mb-1.5 flex-wrap gap-2">
+                <span className="inline-block px-3 py-1 rounded-full bg-sky-50 border border-sky-200 text-sky-700 text-xs font-black">
+                  {voiceStep === "listening" ? "Sedang Merekam..." : "Suara Dicatat"}
+                </span>
+                {voiceStep === "listening" && (
+                  <span className="text-xs font-black text-sky-700 font-mono bg-sky-100/90 px-2.5 py-0.5 rounded-full">
+                    Sisa: {recordSeconds} dtk (Maks. 30 dtk)
+                  </span>
+                )}
+              </div>
               <h3 className="text-lg font-black text-slate-900">
                 {voiceStep === "listening" ? "Sampaikan Bantuan yang Diperlukan" : "Rangkuman Permintaan"}
               </h3>
+              <p className="text-xs text-slate-400 font-medium mt-0.5">
+                {voiceStep === "listening" ? "Bicara dengan jelas. Suara terekam otomatis." : "Pesan suara telah siap diteruskan ke relawan."}
+              </p>
             </div>
 
             {voiceStep === "listening" ? (
-              <div className="flex items-center justify-center gap-1.5 h-10 py-1">
-                {[4, 7, 11, 7, 5, 10, 13, 7, 5, 9].map((h, i) => (
-                  <div
-                    key={i}
-                    className="w-1.5 bg-sky-600 rounded-full animate-pulse"
-                    style={{ height: `${h * 2.4}px`, animationDelay: `${i * 0.08}s` }}
-                  />
-                ))}
+              <div className="space-y-2 py-2">
+                <div className="flex items-center justify-center gap-1.5 h-12 py-1">
+                  {[4, 8, 14, 8, 6, 12, 16, 9, 6, 11, 7, 13, 5].map((h, i) => (
+                    <div
+                      key={i}
+                      className="w-1.5 bg-sky-600 rounded-full animate-pulse"
+                      style={{ height: `${h * 2.3}px`, animationDelay: `${i * 0.08}s` }}
+                    />
+                  ))}
+                </div>
+                <p className="text-[11px] text-sky-700 font-bold">Gelombang audio aktif mendeteksi suara</p>
               </div>
             ) : (
               <div className="p-4 bg-slate-50 rounded-2xl border border-slate-200 text-left text-xs sm:text-sm font-medium text-slate-800 leading-relaxed">
