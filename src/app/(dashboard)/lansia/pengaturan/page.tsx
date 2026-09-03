@@ -16,20 +16,7 @@ import {
   Heart,
   BookOpen
 } from "lucide-react";
-
-function speakPrompt(text: string) {
-  if (typeof window !== "undefined" && "speechSynthesis" in window) {
-    try {
-      window.speechSynthesis.cancel();
-      const utterance = new SpeechSynthesisUtterance(text);
-      utterance.lang = "id-ID";
-      utterance.rate = 0.88;
-      utterance.pitch = 1.0;
-      window.speechSynthesis.speak(utterance);
-    } catch {
-    }
-  }
-}
+import { speakIndonesian } from "@/lib/speak";
 
 export default function PengaturanLansiaPage() {
   const [textSize, setTextSize] = useState<"normal" | "sedang" | "besar">("sedang");
@@ -44,8 +31,8 @@ export default function PengaturanLansiaPage() {
 
   const handleSave = () => {
     setSaveSuccess(true);
-    speakPrompt("Pengaturan berhasil disimpan. Tampilan dan suara telah disesuaikan untuk kenyamanan Bapak.");
-    setTimeout(() => setSaveSuccess(null as unknown as boolean), 4000);
+    speakIndonesian("Pengaturan kenyamanan berhasil disimpan.");
+    setTimeout(() => setSaveSuccess(false), 4000);
   };
 
   const handleReset = () => {
@@ -53,7 +40,7 @@ export default function PengaturanLansiaPage() {
     setHighContrast(true);
     setVoiceGuide(true);
     setVoiceSpeed("slow");
-    speakPrompt("Pengaturan dikembalikan ke standar awal yang paling nyaman untuk lansia.");
+    speakIndonesian("Pengaturan dikembalikan ke standar awal yang paling nyaman untuk lansia.");
   };
 
   return (
@@ -64,9 +51,9 @@ export default function PengaturanLansiaPage() {
         <Link
           href="/lansia"
           id="btn-back-pengaturan"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
@@ -432,7 +419,7 @@ export default function PengaturanLansiaPage() {
             <div className="p-4 rounded-2xl bg-slate-50/90 border border-slate-200/80 space-y-2">
               <div className="flex items-center justify-between">
                 <div>
-                  <p className="font-black text-slate-900 text-sm">Dewi Lestari</p>
+                  <p className="font-black text-slate-900 text-sm">Titiek</p>
                   <p className="text-xs text-slate-500 font-medium">Anak Kandung (Perantauan Jakarta)</p>
                 </div>
                 <span className="text-[10.5px] font-black text-[#00624E] bg-[#E6F4EA] border border-emerald-200 px-2.5 py-0.5 rounded-full">
@@ -440,12 +427,12 @@ export default function PengaturanLansiaPage() {
                 </span>
               </div>
               <p className="text-xs font-mono font-bold text-slate-700 pt-1">
-                WhatsApp: 0812-3456-7890
+                WhatsApp: 0812-9876-5432
               </p>
             </div>
 
             <p className="text-xs text-slate-400 font-medium">
-              Setiap kali Bapak menekan tombol kabar atau bantuan, laporan otomatis terkirim ke WhatsApp Dewi.
+              Setiap kali Bapak menekan tombol kabar atau bantuan, laporan otomatis terkirim ke WhatsApp Titiek.
             </p>
           </div>
 

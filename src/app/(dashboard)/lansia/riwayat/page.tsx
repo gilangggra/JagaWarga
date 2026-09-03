@@ -7,7 +7,6 @@ import {
   Clock, 
   CheckCircle2, 
   Phone, 
-  Star, 
   ChevronDown, 
   ChevronUp, 
   Pill, 
@@ -17,7 +16,9 @@ import {
   Package, 
   User, 
   Calendar,
-  ArrowRight
+  ArrowRight,
+  Check,
+  FileText
 } from "lucide-react";
 
 interface RiwayatItem {
@@ -29,9 +30,14 @@ interface RiwayatItem {
   tanggal: string;
   waktu: string;
   status: "selesai" | "dibatalkan";
-  rating?: number;
   total?: string;
+  sumberDana?: string;
   detail: string[];
+  struk?: {
+    toko: string;
+    nomor: string;
+    catatan: string;
+  };
 }
 
 const RIWAYAT_DATA: RiwayatItem[] = [
@@ -44,13 +50,18 @@ const RIWAYAT_DATA: RiwayatItem[] = [
     tanggal: "Rabu, 26 Mei 2024",
     waktu: "08:45 WIB",
     status: "selesai",
-    rating: 5,
     total: "Rp 87.500",
+    sumberDana: "Lunas oleh Titiek (Anak)",
     detail: [
       "Amlodipin 5mg — 30 tablet",
       "Metformin 500mg — 30 tablet",
       "Vitamin D3 — 1 botol",
     ],
+    struk: {
+      toko: "Apotek K-24 Gejayan",
+      nomor: "STR-08241",
+      catatan: "Resep obat rutin telah ditebus lengkap & dicocokkan dengan resep dokter"
+    }
   },
   {
     id: "2",
@@ -61,9 +72,14 @@ const RIWAYAT_DATA: RiwayatItem[] = [
     tanggal: "Selasa, 25 Mei 2024",
     waktu: "07:30 WIB",
     status: "selesai",
-    rating: 4,
     total: "Rp 32.000",
+    sumberDana: "Lunas oleh Titiek (Anak)",
     detail: ["Bayam 1 ikat", "Wortel 1/2 kg", "Tahu putih 4 buah", "Tempe 2 buah"],
+    struk: {
+      toko: "Warung Sayur Bu Marmi",
+      nomor: "NOTA-142",
+      catatan: "Sayuran segar diantar langsung ke teras rumah Bapak"
+    }
   },
   {
     id: "3",
@@ -74,8 +90,8 @@ const RIWAYAT_DATA: RiwayatItem[] = [
     tanggal: "Senin, 20 Mei 2024",
     waktu: "09:00 WIB",
     status: "selesai",
-    rating: 5,
     total: "Gratis Kas RT",
+    sumberDana: "Dana Kas RT 04 (Bebas Biaya)",
     detail: [
       "Cek tensi: 125/80 mmHg",
       "Cek gula darah: 108 mg/dL",
@@ -91,9 +107,14 @@ const RIWAYAT_DATA: RiwayatItem[] = [
     tanggal: "Kamis, 16 Mei 2024",
     waktu: "14:15 WIB",
     status: "selesai",
-    rating: 5,
     total: "Rp 24.000",
+    sumberDana: "Lunas oleh Titiek (Anak)",
     detail: ["Paracetamol 500mg — 10 tablet", "Antasida — 1 strip"],
+    struk: {
+      toko: "Apotek Kimia Farma Kaliurang",
+      nomor: "STR-07119",
+      catatan: "Obat pertolongan pertama keluhan lambung"
+    }
   },
   {
     id: "5",
@@ -104,7 +125,9 @@ const RIWAYAT_DATA: RiwayatItem[] = [
     tanggal: "Senin, 13 Mei 2024",
     waktu: "10:00 WIB",
     status: "dibatalkan",
-    detail: ["Jadwal ditunda karena hujan lebat", "Dijadwalkan ulang minggu berikutnya"],
+    total: "Tidak Ada Biaya",
+    sumberDana: "Jadwal dialihkan",
+    detail: ["Jadwal ditunda karena hujan lebat", "Dijadwalkan ulang minggu berikutnya tanpa biaya"],
   },
 ];
 
@@ -157,9 +180,9 @@ export default function RiwayatLansiaPage() {
         <Link
           href="/lansia"
           id="btn-back-riwayat"
-          className="inline-flex items-center gap-2 text-xs sm:text-sm font-bold text-slate-500 hover:text-[#00624E] transition-colors group"
+          className="inline-flex items-center gap-2.5 px-4 py-2.5 rounded-2xl bg-white border border-slate-200/90 hover:border-emerald-300 hover:bg-emerald-50/40 text-slate-700 hover:text-[#00624E] font-black text-xs sm:text-sm shadow-2xs transition-all active:scale-95 group"
         >
-          <ArrowLeft className="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
+          <ArrowLeft className="w-4 h-4 text-slate-400 group-hover:text-[#00624E] group-hover:-translate-x-0.5 transition-transform" />
           <span>Kembali ke Beranda</span>
         </Link>
       </div>
@@ -229,9 +252,9 @@ export default function RiwayatLansiaPage() {
                 }`}
               >
                 {f === "semua" ? "Semua Kategori" :
-                 f === "obat" ? "💊 Beli Obat" :
-                 f === "sayur" ? "🛒 Belanja Sayur" :
-                 f === "kontrol" ? "💜 Teman Kontrol" : "🏠 Cek Rumah"}
+                 f === "obat" ? "Beli Obat" :
+                 f === "sayur" ? "Belanja Sayur" :
+                 f === "kontrol" ? "Teman Kontrol" : "Cek Rumah"}
               </button>
             ))}
           </div>
@@ -248,7 +271,7 @@ export default function RiwayatLansiaPage() {
                 >
                   <button
                     onClick={() => setExpandedId(expanded ? null : item.id)}
-                    className="w-full p-5 sm:p-6 flex items-start gap-4 sm:gap-5 text-left cursor-pointer hover:bg-slate-50/50 transition-colors"
+                    className="w-full p-5 sm:p-6 flex items-start gap-4 sm:gap-5 text-left cursor-pointer hover:bg-slate-50/50 transition-colors group"
                   >
                     
                     <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-2xl ${cfg.bg} ${cfg.text} flex items-center justify-center shrink-0 shadow-2xs`}>
@@ -264,7 +287,7 @@ export default function RiwayatLansiaPage() {
                         </div>
                         <div className="flex flex-col items-end gap-1 shrink-0">
                           {item.status === "selesai" ? (
-                            <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-[#00624E] bg-[#E6F4EA] border border-emerald-200 px-3 py-1 rounded-full">
+                            <span className="inline-flex items-center gap-1.5 text-[11px] font-black text-[#00624E] bg-[#E6F4EA] border border-emerald-200 px-3 py-1 rounded-full shadow-2xs">
                               <CheckCircle2 className="w-3.5 h-3.5" /> Selesai
                             </span>
                           ) : (
@@ -273,7 +296,15 @@ export default function RiwayatLansiaPage() {
                             </span>
                           )}
                           {item.total && (
-                            <span className="text-xs sm:text-sm font-black text-slate-800 mt-0.5">{item.total}</span>
+                            <div className="text-right mt-0.5">
+                              <span className="text-xs sm:text-sm font-black text-slate-800">{item.total}</span>
+                              {item.sumberDana && (
+                                <span className="flex items-center justify-end gap-1 text-[10.5px] font-bold text-[#00624E] mt-0.5">
+                                  <Check className="w-3 h-3 stroke-[3]" />
+                                  <span>{item.sumberDana}</span>
+                                </span>
+                              )}
+                            </div>
                           )}
                         </div>
                       </div>
@@ -289,30 +320,53 @@ export default function RiwayatLansiaPage() {
                         </div>
                       </div>
 
-                      {item.rating && (
-                        <div className="flex items-center gap-1 mt-2">
-                          {[...Array(5)].map((_, i) => (
-                            <Star
-                              key={i}
-                              className={`w-4 h-4 ${i < item.rating! ? "text-amber-400 fill-amber-400" : "text-slate-200 fill-slate-200"}`}
-                            />
-                          ))}
-                          <span className="text-xs font-bold text-amber-600 ml-1">Sangat Membantu</span>
+                      {item.status === "selesai" ? (
+                        <div className="flex flex-wrap items-center gap-2 mt-3 pt-2.5 border-t border-slate-100">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-rose-50 text-rose-700 border border-rose-200/80 text-[11px] font-bold shadow-2xs">
+                            <Heart className="w-3.5 h-3.5 fill-rose-500 text-rose-500" />
+                            <span>Ucapan Terima Kasih Terkirim</span>
+                          </span>
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-50 text-[#00624E] border border-emerald-200/80 text-[11px] font-bold shadow-2xs">
+                            <CheckCircle2 className="w-3.5 h-3.5 text-[#00624E]" />
+                            <span>Gotong Royong Selesai</span>
+                          </span>
+                        </div>
+                      ) : (
+                        <div className="flex items-center gap-2 mt-3 pt-2.5 border-t border-slate-100">
+                          <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-slate-100 text-slate-600 border border-slate-200 text-[11px] font-bold">
+                            <Clock className="w-3.5 h-3.5 text-slate-400" />
+                            <span>Jadwal Ditunda Transparan (Hujan Lebat)</span>
+                          </span>
                         </div>
                       )}
                     </div>
 
-                    <div className="shrink-0 text-slate-400 mt-1">
-                      {expanded ? <ChevronUp className="w-5 h-5 text-slate-600" /> : <ChevronDown className="w-5 h-5" />}
+                    <div className="flex items-center gap-2 shrink-0 self-center sm:self-start">
+                      <span className="hidden sm:inline-flex items-center gap-1 text-xs font-black text-[#00624E] bg-emerald-50 border border-emerald-200/80 px-3 py-1.5 rounded-xl group-hover:bg-emerald-100 transition-all shadow-2xs">
+                        <span>{expanded ? "Tutup Rincian" : "Lihat Struk Belanja"}</span>
+                        <ArrowRight className={`w-3.5 h-3.5 transition-transform ${expanded ? "-rotate-90" : "group-hover:translate-x-0.5"}`} />
+                      </span>
+                      <div className="w-8 h-8 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-400 group-hover:border-slate-300">
+                        {expanded ? <ChevronUp className="w-4 h-4 text-slate-700" /> : <ChevronDown className="w-4 h-4" />}
+                      </div>
                     </div>
                   </button>
 
                   {expanded && (
-                    <div className="px-5 sm:px-6 pb-6 pt-0 border-t border-slate-100 bg-slate-50/50">
+                    <div className="px-5 sm:px-6 pb-6 pt-0 border-t border-slate-100 bg-slate-50/50 space-y-4">
                       <div className="pt-4 space-y-3">
-                        <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">
-                          Rincian Barang / Layanan
-                        </span>
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <span className="text-[10.5px] font-extrabold uppercase tracking-widest text-slate-400">
+                            Rincian Barang / Layanan
+                          </span>
+                          {item.struk && (
+                            <span className="inline-flex items-center gap-1.5 text-xs font-bold text-slate-600 bg-white border border-slate-200 px-2.5 py-1 rounded-lg shadow-2xs">
+                              <FileText className="w-3.5 h-3.5 text-[#00624E]" />
+                              <span>{item.struk.toko} ({item.struk.nomor})</span>
+                            </span>
+                          )}
+                        </div>
+
                         <ul className="space-y-2">
                           {item.detail.map((d, i) => (
                             <li key={i} className="flex items-center gap-3 text-sm font-bold text-slate-700 bg-white p-3 rounded-2xl border border-slate-100 shadow-2xs">
@@ -321,7 +375,18 @@ export default function RiwayatLansiaPage() {
                             </li>
                           ))}
                         </ul>
-                        <div className="flex items-center justify-between pt-2">
+
+                        {item.struk && (
+                          <div className="p-3.5 bg-emerald-50/80 border border-emerald-200/90 rounded-2xl flex items-start gap-3">
+                            <CheckCircle2 className="w-4 h-4 text-[#00624E] shrink-0 mt-0.5" />
+                            <div className="text-xs">
+                              <p className="font-black text-[#00624E]">Struk Belanja Terverifikasi Relawan</p>
+                              <p className="text-emerald-950 font-medium mt-0.5 leading-relaxed">{item.struk.catatan}. Biaya talangan obat/belanjaan telah diselesaikan secara nontunai oleh Titiek.</p>
+                            </div>
+                          </div>
+                        )}
+
+                        <div className="flex items-center justify-between pt-2 flex-wrap gap-2">
                           <div className="flex items-center gap-2 text-xs font-bold text-slate-500">
                             <Clock className="w-4 h-4 text-[#00624E]" />
                             <span>Waktu Penyerahan: <strong>{item.waktu}</strong></span>
