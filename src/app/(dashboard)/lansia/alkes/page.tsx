@@ -340,7 +340,7 @@ export default function AlkesPage() {
           </div>
           <div>
             <p className="font-black text-slate-900 text-sm sm:text-base">
-              Ingin Berdonasi Alkes / Kas Jimpitan?
+              Ingin Berdonasi Alkes untuk Warga?
             </p>
             <p className="text-slate-500 text-xs font-medium mt-0.5">
               Hubungi pengurus RT 04 untuk menyumbangkan alat kesehatan demi kemanfaatan bersama.

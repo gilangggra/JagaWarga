@@ -14,7 +14,12 @@ import {
   RotateCcw,
   Sparkles,
   Heart,
-  BookOpen
+  BookOpen,
+  Sunrise,
+  Sun,
+  Moon,
+  Gauge,
+  Zap
 } from "lucide-react";
 import { speakIndonesian } from "@/lib/speak";
 
@@ -28,6 +33,12 @@ export default function PengaturanLansiaPage() {
   const [obatPagi, setObatPagi] = useState(true);
   const [obatSiang, setObatSiang] = useState(true);
   const [obatMalam, setObatMalam] = useState(true);
+
+  const speakPrompt = (text: string, force = false) => {
+    if (voiceGuide || force) {
+      speakIndonesian(text);
+    }
+  };
 
   const handleSave = () => {
     setSaveSuccess(true);
@@ -265,13 +276,14 @@ export default function PengaturanLansiaPage() {
                     setVoiceSpeed("slow");
                     speakPrompt("Kecepatan pemandu suara disetel perlahan dan jelas.");
                   }}
-                  className={`p-3 rounded-2xl border text-center transition-all text-xs font-black cursor-pointer ${
+                  className={`p-3 rounded-2xl border text-center transition-all text-xs font-black cursor-pointer flex items-center justify-center gap-1.5 ${
                     voiceSpeed === "slow"
                       ? "bg-sky-50 border-2 border-sky-600 text-sky-900"
                       : "bg-slate-50 border-slate-200 text-slate-700"
                   }`}
                 >
-                  🐢 Lambat &amp; Sangat Jelas
+                  <Gauge className="w-4 h-4 text-sky-600" />
+                  <span>Lambat &amp; Jelas</span>
                 </button>
                 <button
                   type="button"
@@ -279,13 +291,14 @@ export default function PengaturanLansiaPage() {
                     setVoiceSpeed("normal");
                     speakPrompt("Kecepatan pemandu suara disetel normal.");
                   }}
-                  className={`p-3 rounded-2xl border text-center transition-all text-xs font-black cursor-pointer ${
+                  className={`p-3 rounded-2xl border text-center transition-all text-xs font-black cursor-pointer flex items-center justify-center gap-1.5 ${
                     voiceSpeed === "normal"
                       ? "bg-sky-50 border-2 border-sky-600 text-sky-900"
                       : "bg-slate-50 border-slate-200 text-slate-700"
                   }`}
                 >
-                  ⚡ Standar Normal
+                  <Zap className="w-4 h-4 text-sky-600" />
+                  <span>Standar Normal</span>
                 </button>
               </div>
             </div>
@@ -293,7 +306,7 @@ export default function PengaturanLansiaPage() {
             
             <button
               type="button"
-              onClick={() => speakPrompt("Halo Bapak Prabowo, pemandu suara JagaWarga siap membantu setiap saat.")}
+              onClick={() => speakPrompt("Halo Bapak Prabowo, pemandu suara JagaWarga siap membantu setiap saat.", true)}
               className="w-full py-3 bg-sky-50 hover:bg-sky-100 text-sky-800 font-black text-xs sm:text-sm rounded-2xl border border-sky-200 transition-all flex items-center justify-center gap-2 cursor-pointer active:scale-95"
             >
               <Volume2 className="w-4 h-4 text-sky-700" />
@@ -320,9 +333,12 @@ export default function PengaturanLansiaPage() {
 
             <div className="space-y-2.5">
               
+              {/* Pagi */}
               <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">🌅</span>
+                  <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <Sunrise className="w-4 h-4" />
+                  </div>
                   <div>
                     <p className="font-black text-xs sm:text-sm text-slate-900">Pagi (07:00 WIB)</p>
                     <p className="text-slate-400 text-[11px]">Obat Darah Tinggi (Amlodipine 5mg)</p>
@@ -344,9 +360,12 @@ export default function PengaturanLansiaPage() {
               </div>
 
               
+              {/* Siang */}
               <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">☀️</span>
+                  <div className="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0">
+                    <Sun className="w-4 h-4" />
+                  </div>
                   <div>
                     <p className="font-black text-xs sm:text-sm text-slate-900">Siang (13:00 WIB)</p>
                     <p className="text-slate-400 text-[11px]">Vitamin &amp; Kalsium Tulang</p>
@@ -368,9 +387,12 @@ export default function PengaturanLansiaPage() {
               </div>
 
               
+              {/* Malam */}
               <div className="flex items-center justify-between p-3.5 rounded-2xl bg-slate-50/80 border border-slate-200/70">
                 <div className="flex items-center gap-3">
-                  <span className="text-lg">🌙</span>
+                  <div className="w-8 h-8 rounded-xl bg-indigo-50 text-indigo-600 flex items-center justify-center shrink-0">
+                    <Moon className="w-4 h-4" />
+                  </div>
                   <div>
                     <p className="font-black text-xs sm:text-sm text-slate-900">Malam (20:00 WIB)</p>
                     <p className="text-slate-400 text-[11px]">Obat Kolesterol &amp; Lambung</p>
@@ -390,6 +412,7 @@ export default function PengaturanLansiaPage() {
                   />
                 </button>
               </div>
+
             </div>
 
           </div>

@@ -20,37 +20,39 @@ const NAV_ITEMS = [
   {
     href: "/anak",
     label: "Pemantauan",
-    subtitle: "Kondisi & Kabar Ortu",
     exact: true,
     icon: <Home className="w-5 h-5" />,
   },
   {
     href: "/anak/bantuan",
     label: "Titip Bantuan",
-    subtitle: "Obat, Sayur & Relawan",
     exact: false,
     icon: <HandHeart className="w-5 h-5" />,
   },
   {
     href: "/anak/status",
     label: "Status Bantuan",
-    subtitle: "Lacak Perjalanan Relawan",
     exact: false,
     icon: <Activity className="w-5 h-5" />,
   },
   {
     href: "/anak/alkes",
     label: "Pinjam Alkes",
-    subtitle: "Kas RT Bebas Biaya",
     exact: false,
     icon: <Accessibility className="w-5 h-5" />,
   },
   {
     href: "/anak/riwayat",
     label: "Riwayat Bantuan",
-    subtitle: "Catatan Selesai",
     exact: false,
     icon: <History className="w-5 h-5" />,
+  },
+  {
+    href: "/anak/kesehatan",
+    label: "Catatan Sehat",
+    exact: false,
+    icon: <Heart className="w-5 h-5" />,
+    iconBg: "bg-purple-100 text-purple-600 group-hover:bg-purple-200",
   },
 ];
 
@@ -67,7 +69,7 @@ export default function AnakLayout({
   return (
     <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-emerald-100">
       
-      
+      {/* SIDEBAR DESKTOP */}
       <aside className="hidden lg:block lg:w-72 xl:w-80 bg-white border-r border-slate-200/80 self-stretch shrink-0 z-30 shadow-[2px_0_16px_rgba(0,0,0,0.02)]">
         <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden">
           
@@ -95,57 +97,26 @@ export default function AnakLayout({
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
+                  className={`flex items-center gap-3.5 px-3.5 py-3 rounded-2xl transition-all duration-200 group ${
                     active
                       ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
                       : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
                   }`}
                 >
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-                    active ? "bg-[#00624E] text-white shadow-xs" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
+                    active
+                      ? "bg-[#00624E] text-white shadow-xs"
+                      : (item.iconBg || "bg-slate-100 text-slate-500 group-hover:bg-slate-200")
                   }`}>
                     {item.icon}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm leading-tight">{item.label}</p>
-                    <p className={`text-[11px] font-medium mt-0.5 truncate ${
-                      active ? "text-emerald-800" : "text-slate-400"
-                    }`}>
-                      {item.subtitle}
-                    </p>
-                  </div>
+                  <span className="text-sm leading-none flex-1 truncate">{item.label}</span>
                   {active && (
-                    <span className="w-2 h-2 rounded-full bg-[#00624E]" />
+                    <span className="w-2 h-2 rounded-full bg-[#00624E] shrink-0" />
                   )}
                 </Link>
               );
             })}
-
-            <Link
-              href="/anak/kesehatan"
-              className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
-                isActive("/anak/kesehatan", false)
-                  ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
-                  : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
-              }`}
-            >
-              <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-                isActive("/anak/kesehatan", false) ? "bg-[#00624E] text-white shadow-xs" : "bg-purple-100 text-purple-600 group-hover:bg-purple-200"
-              }`}>
-                <Heart className="w-5 h-5" />
-              </div>
-              <div className="min-w-0 flex-1">
-                <p className="text-sm leading-tight">Catatan Sehat</p>
-                <p className={`text-[11px] font-medium mt-0.5 truncate ${
-                  isActive("/anak/kesehatan", false) ? "text-emerald-800" : "text-slate-400"
-                }`}>
-                  Tensi &amp; Obat Ortu
-                </p>
-              </div>
-              {isActive("/anak/kesehatan", false) && (
-                <span className="w-2 h-2 rounded-full bg-[#00624E]" />
-              )}
-            </Link>
           </nav>
 
           <div className="p-4 border-t border-slate-100 space-y-2.5 shrink-0">
