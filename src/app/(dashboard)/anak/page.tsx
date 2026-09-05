@@ -2,17 +2,17 @@
 
 import Link from "next/link";
 import { useState } from "react";
-import { 
-  Pill, 
-  ShoppingCart, 
-  Heart, 
-  HandHeart, 
-  AlertTriangle, 
-  Check, 
-  Phone, 
-  ArrowRight, 
-  Clock, 
-  Bell, 
+import {
+  Pill,
+  ShoppingCart,
+  Heart,
+  HandHeart,
+  AlertTriangle,
+  Check,
+  Phone,
+  ArrowRight,
+  Clock,
+  Bell,
   ShieldCheck,
   Accessibility,
   ChevronRight,
@@ -25,7 +25,8 @@ import {
   Sparkles,
   Search,
   QrCode,
-  X
+  X,
+  Plus
 } from "lucide-react";
 
 interface Relawan {
@@ -145,7 +146,7 @@ function IlluSeniorBapak() {
         <path d="M20 86 C20 68, 32 62, 50 62 C68 62, 80 68, 80 86 Z" fill="#00624E" opacity="0.85" />
         <path d="M42 62 L50 74 L58 62 Z" fill="#FED7AA" />
         <path d="M36 62 L44 86 L50 86 L56 86 L64 62" stroke="#FFFFFF" strokeWidth="1.5" opacity="0.4" fill="none" />
-        
+
         <circle cx="28" cy="45" r="5" fill="#FDBA74" />
         <circle cx="72" cy="45" r="5" fill="#FDBA74" />
 
@@ -182,7 +183,7 @@ function IlluSeniorIbu() {
     <div className="relative w-20 h-20 sm:w-22 sm:h-22 rounded-3xl bg-[#FEF3C7] flex items-center justify-center shrink-0 shadow-inner">
       <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-16 h-16 sm:w-18 sm:h-18">
         <circle cx="50" cy="50" r="44" fill="#FEF3C7" />
-        
+
         <path d="M20 86 C20 68, 32 62, 50 62 C68 62, 80 68, 80 86 Z" fill="#D97706" opacity="0.8" />
         <path d="M42 62 L50 74 L58 62 Z" fill="#FED7AA" />
         <path d="M38 62 L50 78 L62 62" stroke="#FFFFFF" strokeWidth="1.5" opacity="0.5" fill="none" />
@@ -312,11 +313,10 @@ export default function AnakDashboardPage() {
             type="button"
             onClick={() => setActiveTab("keluarga")}
             id="tab-keluarga"
-            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-2 ${
-              activeTab === "keluarga"
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-2 ${activeTab === "keluarga"
                 ? "bg-white text-[#00624E] shadow-xs"
                 : "text-slate-500 hover:text-slate-800"
-            }`}
+              }`}
           >
             {activeTab === "keluarga" && <Check className="w-4 h-4 stroke-[3]" />}
             <span>KELUARGA SAYA (2)</span>
@@ -326,11 +326,10 @@ export default function AnakDashboardPage() {
             type="button"
             onClick={() => setActiveTab("tetangga")}
             id="tab-tetangga"
-            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-2 ${
-              activeTab === "tetangga"
+            className={`px-4 sm:px-5 py-2.5 rounded-xl text-xs sm:text-sm font-black transition-all cursor-pointer flex items-center gap-2 ${activeTab === "tetangga"
                 ? "bg-white text-[#00624E] shadow-xs"
                 : "text-slate-500 hover:text-slate-800"
-            }`}
+              }`}
           >
             {activeTab === "tetangga" && <Check className="w-4 h-4 stroke-[3]" />}
             <span>BANTU TETANGGA SEKITAR</span>
@@ -340,7 +339,7 @@ export default function AnakDashboardPage() {
 
       {activeTab === "keluarga" ? (
         <div className="space-y-6 sm:space-y-8">
-          
+
           <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 bg-[#E6F4EA]/90 border border-emerald-200/80 rounded-3xl p-4 sm:p-5 shadow-2xs">
             <div className="flex items-center gap-3.5">
               <div className="w-11 h-11 rounded-2xl bg-[#00624E] text-white flex items-center justify-center shadow-xs shrink-0">
@@ -356,9 +355,20 @@ export default function AnakDashboardPage() {
               </div>
             </div>
 
-            <div className="flex items-center gap-2 px-4 py-2 rounded-2xl bg-white/90 border border-emerald-300/80 shadow-2xs self-start sm:self-auto shrink-0">
-              <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
-              <span className="text-xs font-black text-[#00624E]">Koneksi Posko RT 04 Aktif</span>
+            <div className="flex flex-wrap items-center gap-2.5 self-start sm:self-auto shrink-0">
+              <div className="flex items-center gap-2 px-3.5 py-2 rounded-2xl bg-white/90 border border-emerald-300/80 shadow-2xs">
+                <span className="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span className="text-xs font-black text-[#00624E]">Koneksi Posko RT 04 Aktif</span>
+              </div>
+              <Link
+                href="/anak/tambah-lansia"
+                id="btn-tambah-lansia-dashboard"
+                className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-2xl bg-[#00624E] hover:bg-[#004d3e] text-white text-xs font-black shadow-2xs active:scale-95 transition-all cursor-pointer"
+                title="Hubungkan Orang Tua Baru"
+              >
+                <Plus className="w-3.5 h-3.5 stroke-[2.5]" />
+                <span>Lansia Baru</span>
+              </Link>
             </div>
           </div>
 
@@ -558,11 +568,10 @@ export default function AnakDashboardPage() {
             <div className="bg-white rounded-3xl border border-slate-200/90 p-5 sm:p-6 shadow-xs hover:border-slate-300 hover:shadow-sm transition-all flex flex-col justify-between min-h-[250px]">
               <div>
                 <div className="flex items-center">
-                  <span className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black border ${
-                    qrisPaid 
-                      ? "bg-[#E6F4EA] text-[#00624E] border-emerald-200" 
+                  <span className={`inline-flex items-center gap-1.5 sm:gap-2 px-3 sm:px-3.5 py-1 sm:py-1.5 rounded-full text-[11px] sm:text-xs font-black border ${qrisPaid
+                      ? "bg-[#E6F4EA] text-[#00624E] border-emerald-200"
                       : "bg-amber-50 text-amber-800 border-amber-200/80"
-                  }`}>
+                    }`}>
                     {qrisPaid ? (
                       <>
                         <Check className="w-3.5 h-3.5 stroke-[3] text-[#00624E]" />
@@ -668,11 +677,10 @@ export default function AnakDashboardPage() {
             <button
               type="button"
               onClick={() => setSiapMembantu(!siapMembantu)}
-              className={`px-5 py-3 rounded-2xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer ${
-                siapMembantu
+              className={`px-5 py-3 rounded-2xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 shrink-0 cursor-pointer ${siapMembantu
                   ? "bg-[#00624E] hover:bg-[#004d3d] text-white shadow-xs active:scale-95"
                   : "bg-slate-100 hover:bg-slate-200 text-slate-700"
-              }`}
+                }`}
             >
               <Check className={`w-4 h-4 stroke-[3] ${siapMembantu ? "opacity-100" : "opacity-0"}`} />
               <span>{siapMembantu ? "Siap Membantu (Aktif)" : "Aktifkan Status"}</span>
@@ -732,9 +740,8 @@ export default function AnakDashboardPage() {
                 return (
                   <div
                     key={item.id}
-                    className={`bg-white rounded-3xl border p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 transition-all ${
-                      isClaimed ? "border-emerald-300 bg-[#E6F4EA]/30" : "border-slate-200/80 hover:border-slate-300"
-                    }`}
+                    className={`bg-white rounded-3xl border p-5 sm:p-6 shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-5 transition-all ${isClaimed ? "border-emerald-300 bg-[#E6F4EA]/30" : "border-slate-200/80 hover:border-slate-300"
+                      }`}
                   >
                     <div className="space-y-2 flex-1">
                       <div className="flex items-center gap-2.5 flex-wrap">
@@ -933,7 +940,7 @@ export default function AnakDashboardPage() {
                 <span className="font-black text-xs tracking-wider text-slate-800">QRIS STANDAR BI</span>
                 <span className="text-[10px] font-bold text-slate-400">Nol Biaya Admin</span>
               </div>
-              
+
               <div className="w-48 h-48 mx-auto bg-slate-50 p-2.5 rounded-xl border border-slate-200 flex items-center justify-center relative">
                 <svg viewBox="0 0 100 100" className="w-full h-full text-slate-900" fill="currentColor">
                   <rect x="0" y="0" width="28" height="28" fill="none" stroke="currentColor" strokeWidth="6" rx="3" />

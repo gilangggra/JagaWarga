@@ -16,7 +16,9 @@ import {
   MessageSquare,
   Building,
   Save,
-  CheckCircle2
+  CheckCircle2,
+  Plus,
+  Mail
 } from "lucide-react";
 
 export default function ProfilAnakPage() {
@@ -140,12 +142,14 @@ export default function ProfilAnakPage() {
                 {profil.peran} • {profil.lokasi}
               </p>
 
-              <div className="pt-2 flex items-center justify-center sm:justify-start gap-2">
-                <span className="text-[11px] font-bold text-white bg-white/15 px-3 py-1 rounded-full">
-                  📱 {profil.telepon}
+              <div className="pt-2 flex flex-wrap items-center justify-center sm:justify-start gap-2">
+                <span className="text-[11px] font-bold text-white bg-white/15 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+                  <Phone className="w-3 h-3 text-emerald-200" />
+                  <span>{profil.telepon}</span>
                 </span>
-                <span className="text-[11px] font-bold text-emerald-200 bg-white/10 px-3 py-1 rounded-full">
-                  ✉️ {profil.email}
+                <span className="text-[11px] font-bold text-emerald-200 bg-white/10 px-3 py-1 rounded-full inline-flex items-center gap-1.5">
+                  <Mail className="w-3 h-3 text-emerald-200" />
+                  <span>{profil.email}</span>
                 </span>
               </div>
             </div>
@@ -312,6 +316,17 @@ export default function ProfilAnakPage() {
                   </Link>
                 </div>
               </div>
+            </div>
+
+            <div className="pt-1">
+              <Link
+                href="/anak/tambah-lansia"
+                id="btn-hubungkan-lansia-baru"
+                className="w-full py-3.5 px-4 rounded-2xl border-2 border-dashed border-emerald-300 hover:border-[#00624E] bg-emerald-50/60 hover:bg-emerald-50 text-[#00624E] font-black text-xs sm:text-sm flex items-center justify-center gap-2 transition-all active:scale-[0.99] group shadow-2xs cursor-pointer"
+              >
+                <Plus className="w-4 h-4 stroke-[2.5] group-hover:rotate-90 transition-transform" />
+                <span>Hubungkan Lansia Baru</span>
+              </Link>
             </div>
           </div>
 
