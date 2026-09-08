@@ -13,13 +13,15 @@ import {
   AlertTriangle, 
   Shield, 
   ArrowLeftRight,
-  Heart
+  Heart,
+  Radio,
+  Navigation
 } from "lucide-react";
 
-const NAV_ITEMS = [
+const NAV_ITEMS_KELUARGA = [
   {
     href: "/anak",
-    label: "Pemantauan",
+    label: "Pemantauan Ortu",
     exact: true,
     icon: <Home className="w-5 h-5" />,
   },
@@ -36,6 +38,35 @@ const NAV_ITEMS = [
     icon: <Activity className="w-5 h-5" />,
   },
   {
+    href: "/anak/kesehatan",
+    label: "Catatan Sehat",
+    exact: false,
+    icon: <Heart className="w-5 h-5" />,
+    iconBg: "bg-purple-100 text-purple-600 group-hover:bg-purple-200",
+  },
+];
+
+const NAV_ITEMS_TETANGGA = [
+  {
+    href: "/anak/radar",
+    label: "Bantu Tetangga",
+    exact: false,
+    icon: <Radio className="w-5 h-5" />,
+    badge: "1 Butuh",
+    badgeColor: "bg-emerald-100 text-emerald-800",
+  },
+  {
+    href: "/anak/tugas-siaga",
+    label: "Tugas Siaga",
+    exact: false,
+    icon: <Navigation className="w-5 h-5" />,
+    badge: "1 Misi",
+    badgeColor: "bg-amber-500 text-white animate-pulse",
+  },
+];
+
+const NAV_ITEMS_KOMUNITAS = [
+  {
     href: "/anak/alkes",
     label: "Pinjam Alkes",
     exact: false,
@@ -43,16 +74,9 @@ const NAV_ITEMS = [
   },
   {
     href: "/anak/riwayat",
-    label: "Riwayat Bantuan",
+    label: "Riwayat & Poin",
     exact: false,
     icon: <History className="w-5 h-5" />,
-  },
-  {
-    href: "/anak/kesehatan",
-    label: "Catatan Sehat",
-    exact: false,
-    icon: <Heart className="w-5 h-5" />,
-    iconBg: "bg-purple-100 text-purple-600 group-hover:bg-purple-200",
   },
 ];
 
@@ -82,44 +106,123 @@ export default function AnakLayout({
                 <p className="font-black text-slate-900 text-xl tracking-tight leading-none">
                   JagaWarga
                 </p>
+                <p className="text-[10.5px] font-extrabold uppercase tracking-wider text-emerald-800 mt-1">
+                  WARGA &amp; KELUARGA
+                </p>
               </div>
             </Link>
           </div>
 
-          <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto min-h-0">
-            <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-2">
-              Menu Utama
-            </p>
+          <nav className="flex-1 px-4 py-4 space-y-4 overflow-y-auto min-h-0">
             
-            {NAV_ITEMS.map((item) => {
-              const active = isActive(item.href, item.exact);
-              return (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={`flex items-center gap-3.5 px-3.5 py-3 rounded-2xl transition-all duration-200 group ${
-                    active
-                      ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
-                  }`}
-                >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-                    active
-                      ? "bg-[#00624E] text-white shadow-xs"
-                      : (item.iconBg || "bg-slate-100 text-slate-500 group-hover:bg-slate-200")
-                  }`}>
-                    {item.icon}
-                  </div>
-                  <span className="text-sm leading-none flex-1 truncate">{item.label}</span>
-                  {active && (
-                    <span className="w-2 h-2 rounded-full bg-[#00624E] shrink-0" />
-                  )}
-                </Link>
-              );
-            })}
+            {/* GRUP 1: KELUARGA SENDIRI */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-1.5">
+                Keluarga Terpantau
+              </p>
+              {NAV_ITEMS_KELUARGA.map((item) => {
+                const active = isActive(item.href, item.exact);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all duration-200 group ${
+                      active
+                        ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                      active
+                        ? "bg-[#00624E] text-white shadow-xs"
+                        : (item.iconBg || "bg-slate-100 text-slate-500 group-hover:bg-slate-200")
+                    }`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs leading-none flex-1 truncate">{item.label}</span>
+                    {active && (
+                      <span className="w-2 h-2 rounded-full bg-[#00624E] shrink-0" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* GRUP 2: SIAGA TETANGGA (RELAWAN) */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-emerald-800 px-3 mb-1.5 flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                <span>Siaga Tetangga RT 04</span>
+              </p>
+              {NAV_ITEMS_TETANGGA.map((item) => {
+                const active = isActive(item.href, item.exact);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all duration-200 group ${
+                      active
+                        ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                      active
+                        ? "bg-[#00624E] text-white shadow-xs"
+                        : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
+                    }`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs leading-none flex-1 truncate">{item.label}</span>
+                    {item.badge && (
+                      <span className={`text-[10px] font-black px-2 py-0.5 rounded-full ${item.badgeColor}`}>
+                        {item.badge}
+                      </span>
+                    )}
+                    {active && !item.badge && (
+                      <span className="w-2 h-2 rounded-full bg-[#00624E] shrink-0" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
+            {/* GRUP 3: FASILITAS KOMUNITAS */}
+            <div className="space-y-1">
+              <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-1.5">
+                Komunitas &amp; Kas RT
+              </p>
+              {NAV_ITEMS_KOMUNITAS.map((item) => {
+                const active = isActive(item.href, item.exact);
+                return (
+                  <Link
+                    key={item.href}
+                    href={item.href}
+                    className={`flex items-center gap-3.5 px-3.5 py-2.5 rounded-2xl transition-all duration-200 group ${
+                      active
+                        ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
+                        : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+                    }`}
+                  >
+                    <div className={`w-9 h-9 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                      active
+                        ? "bg-[#00624E] text-white shadow-xs"
+                        : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
+                    }`}>
+                      {item.icon}
+                    </div>
+                    <span className="text-xs leading-none flex-1 truncate">{item.label}</span>
+                    {active && (
+                      <span className="w-2 h-2 rounded-full bg-[#00624E] shrink-0" />
+                    )}
+                  </Link>
+                );
+              })}
+            </div>
+
           </nav>
 
-          <div className="p-4 border-t border-slate-100 space-y-2.5 shrink-0">
+          <div className="p-4 border-t border-slate-100 space-y-2 shrink-0">
             <Link
               href="/lansia"
               className="flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs py-2.5 rounded-2xl transition-all border border-slate-200/80"
@@ -130,7 +233,7 @@ export default function AnakLayout({
 
             <Link
               href="/anak/bantuan?darurat=1"
-              className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3.5 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
+              className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
             >
               <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform animate-pulse" />
               <span>Bantuan Darurat Ortu</span>
@@ -266,17 +369,18 @@ export default function AnakLayout({
 
           
           <Link
-            href="/anak/bantuan"
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/anak/bantuan", false)
+            href="/anak/radar"
+            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all relative ${
+              isActive("/anak/radar", false)
                 ? "text-[#00624E] font-black"
                 : "text-slate-400 hover:text-slate-600 font-bold"
             }`}
           >
-            <span className={`p-1.5 rounded-xl ${isActive("/anak/bantuan", false) ? "bg-[#E6F4EA]" : ""}`}>
-              <HandHeart className="w-5 h-5" />
+            <span className={`p-1.5 rounded-xl ${isActive("/anak/radar", false) ? "bg-[#E6F4EA]" : ""}`}>
+              <Radio className="w-5 h-5" />
             </span>
-            <span className="text-[9px] mt-0.5">Titip</span>
+            <span className="text-[9px] mt-0.5">Bantu</span>
+            <span className="absolute top-1 right-2 w-2 h-2 rounded-full bg-amber-500 animate-pulse" />
           </Link>
 
           

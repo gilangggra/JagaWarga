@@ -1,55 +1,59 @@
 "use client";
 
 import Link from "next/link";
+import { useState } from "react";
 import { usePathname } from "next/navigation";
 import { 
   Home, 
-  HandHeart, 
-  Activity, 
+  Heart, 
+  Calendar, 
   Accessibility, 
+  User,
   AlertTriangle, 
-  Shield, 
-  ArrowLeftRight,
+  ArrowRight,
   Settings,
-  History,
-  BookOpen
+  BookOpen,
+  ChevronRight,
+  ChevronLeft,
+  ShieldCheck
 } from "lucide-react";
 
-const NAV_ITEMS = [
+interface NavItem {
+  href: string;
+  label: string;
+  subtitle: string;
+  exact: boolean;
+  icon: React.ReactNode;
+}
+
+const NAV_ITEMS: NavItem[] = [
   {
     href: "/lansia",
     label: "Beranda",
-    subtitle: "Laporan & Kebutuhan",
+    subtitle: "Kabar & Tanda Vital",
     exact: true,
-    icon: <Home className="w-5 h-5" />,
+    icon: <Home className="w-5 h-5 stroke-[2.2]" />,
   },
   {
     href: "/lansia/bantuan",
-    label: "Minta Bantuan",
-    subtitle: "Obat, Sayur & Relawan",
+    label: "Bantuan Warga",
+    subtitle: "Minta & Lacak Bantuan",
     exact: false,
-    icon: <HandHeart className="w-5 h-5" />,
-  },
-  {
-    href: "/lansia/status",
-    label: "Status Bantuan",
-    subtitle: "Lacak Permintaan",
-    exact: false,
-    icon: <Activity className="w-5 h-5" />,
+    icon: <Calendar className="w-5 h-5 stroke-[2.2]" />,
   },
   {
     href: "/lansia/alkes",
     label: "Pinjam Alkes",
     subtitle: "Kas RT Bebas Biaya",
     exact: false,
-    icon: <Accessibility className="w-5 h-5" />,
+    icon: <Accessibility className="w-5 h-5 stroke-[2.2]" />,
   },
   {
-    href: "/lansia/riwayat",
-    label: "Riwayat Bantuan",
-    subtitle: "Catatan Selesai",
+    href: "/lansia/profil",
+    label: "Profil & Kontak",
+    subtitle: "Data Medis & Relawan",
     exact: false,
-    icon: <History className="w-5 h-5" />,
+    icon: <User className="w-5 h-5 stroke-[2.2]" />,
   },
 ];
 
@@ -59,270 +63,305 @@ export default function LansiaLayout({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const isActive = (href: string, exact: boolean) =>
     exact ? pathname === href : pathname.startsWith(href);
 
   return (
-    <div className="min-h-screen bg-[#F8FAFC] text-slate-900 flex flex-col lg:flex-row font-sans selection:bg-emerald-100 w-full max-w-full">
+    <div className="min-h-screen bg-[#F7FBFC] text-slate-800 font-sans selection:bg-[#52B1AF]/20 flex flex-col lg:flex-row relative">
       
-      
-      <aside className="hidden lg:block lg:w-72 xl:w-80 bg-white border-r border-slate-200/80 self-stretch shrink-0 z-30 shadow-[2px_0_16px_rgba(0,0,0,0.02)]">
-        <div className="sticky top-0 h-screen flex flex-col justify-between overflow-hidden">
+      {/* DESKTOP SIDEBAR - Soft Teal Panel with Botanical Leaves & Expand/Collapse Toggle */}
+      <aside 
+        className={`hidden lg:flex sticky top-0 h-screen bg-gradient-to-b from-[#56B4B2] via-[#4FAAA8] to-[#3D9A98] text-white flex-col py-6 px-3 shrink-0 select-none z-30 transition-all duration-300 ease-in-out overflow-hidden ${
+          isExpanded ? "w-64 xl:w-72" : "w-20 xl:w-24 items-center"
+        }`}
+      >
+          {/* ── BOTANICAL LEAF DECORATIONS ─────────────────────────── */}
+          {/* pointer-events-none ensures they never block any click */}
+
+          {/* Leaf A — large tropical leaf, top-right corner */}
+          <svg
+            viewBox="0 0 140 220"
+            className="absolute -top-8 -right-10 w-36 opacity-[0.18] pointer-events-none"
+            style={{ transform: "rotate(15deg)" }}
+            aria-hidden="true"
+          >
+            {/* Natural asymmetric tropical leaf body */}
+            <path
+              d="M70 215 C18 178 -2 128 3 82 C8 36 38 6 70 3 C102 6 132 36 137 82 C142 128 122 178 70 215 Z"
+              fill="white"
+            />
+            {/* Midrib (main vein) */}
+            <line x1="70" y1="215" x2="70" y2="3" stroke="white" strokeWidth="2.8" strokeOpacity="0.5" />
+            {/* Secondary veins */}
+            <line x1="70" y1="55"  x2="35" y2="98"  stroke="white" strokeWidth="1.4" strokeOpacity="0.4" />
+            <line x1="70" y1="55"  x2="105" y2="98"  stroke="white" strokeWidth="1.4" strokeOpacity="0.4" />
+            <line x1="70" y1="95"  x2="22" y2="138" stroke="white" strokeWidth="1.2" strokeOpacity="0.35" />
+            <line x1="70" y1="95"  x2="118" y2="138" stroke="white" strokeWidth="1.2" strokeOpacity="0.35" />
+            <line x1="70" y1="135" x2="30" y2="172" stroke="white" strokeWidth="1"   strokeOpacity="0.3" />
+            <line x1="70" y1="135" x2="110" y2="172" stroke="white" strokeWidth="1"   strokeOpacity="0.3" />
+            <line x1="70" y1="170" x2="45" y2="198" stroke="white" strokeWidth="0.8" strokeOpacity="0.25" />
+            <line x1="70" y1="170" x2="95" y2="198" stroke="white" strokeWidth="0.8" strokeOpacity="0.25" />
+          </svg>
+
+          {/* Leaf B — medium leaf, bottom-left, facing opposite */}
+          <svg
+            viewBox="0 0 110 190"
+            className="absolute -bottom-6 -left-8 w-28 opacity-[0.15] pointer-events-none"
+            style={{ transform: "rotate(-30deg) scaleX(-1)" }}
+            aria-hidden="true"
+          >
+            <path
+              d="M55 185 C14 155 -2 112 3 72 C8 32 30 5 55 3 C80 5 102 32 107 72 C112 112 96 155 55 185 Z"
+              fill="white"
+            />
+            <line x1="55" y1="185" x2="55" y2="3"   stroke="white" strokeWidth="2.3" strokeOpacity="0.45" />
+            <line x1="55" y1="50"  x2="25" y2="88"  stroke="white" strokeWidth="1.2" strokeOpacity="0.38" />
+            <line x1="55" y1="50"  x2="85" y2="88"  stroke="white" strokeWidth="1.2" strokeOpacity="0.38" />
+            <line x1="55" y1="90"  x2="18" y2="125" stroke="white" strokeWidth="1"   strokeOpacity="0.32" />
+            <line x1="55" y1="90"  x2="92" y2="125" stroke="white" strokeWidth="1"   strokeOpacity="0.32" />
+            <line x1="55" y1="128" x2="28" y2="158" stroke="white" strokeWidth="0.9" strokeOpacity="0.28" />
+            <line x1="55" y1="128" x2="82" y2="158" stroke="white" strokeWidth="0.9" strokeOpacity="0.28" />
+          </svg>
+
+          {/* Leaf C — small accent leaf, mid-right */}
+          <svg
+            viewBox="0 0 85 145"
+            className="absolute top-[40%] -right-6 w-20 opacity-[0.14] pointer-events-none"
+            style={{ transform: "rotate(50deg)" }}
+            aria-hidden="true"
+          >
+            <path
+              d="M42 140 C10 118 -1 85 2 57 C5 28 22 4 42 2 C62 4 79 28 82 57 C85 85 74 118 42 140 Z"
+              fill="white"
+            />
+            <line x1="42" y1="140" x2="42" y2="2"  stroke="white" strokeWidth="1.8" strokeOpacity="0.4" />
+            <line x1="42" y1="42"  x2="18" y2="72" stroke="white" strokeWidth="1"   strokeOpacity="0.32" />
+            <line x1="42" y1="42"  x2="66" y2="72" stroke="white" strokeWidth="1"   strokeOpacity="0.32" />
+            <line x1="42" y1="78"  x2="14" y2="105" stroke="white" strokeWidth="0.8" strokeOpacity="0.28" />
+            <line x1="42" y1="78"  x2="70" y2="105" stroke="white" strokeWidth="0.8" strokeOpacity="0.28" />
+          </svg>
+
+          {/* Leaf D — accent, top-left peering in */}
+          <svg
+            viewBox="0 0 65 110"
+            className="absolute top-[15%] -left-4 w-14 opacity-[0.12] pointer-events-none"
+            style={{ transform: "rotate(-55deg)" }}
+            aria-hidden="true"
+          >
+            <path
+              d="M32 106 C8 88 -1 65 2 44 C5 23 17 4 32 2 C47 4 59 23 62 44 C65 65 56 88 32 106 Z"
+              fill="white"
+            />
+            <line x1="32" y1="106" x2="32" y2="2"  stroke="white" strokeWidth="1.5" strokeOpacity="0.38" />
+            <line x1="32" y1="38"  x2="14" y2="62" stroke="white" strokeWidth="0.9" strokeOpacity="0.3" />
+            <line x1="32" y1="38"  x2="50" y2="62" stroke="white" strokeWidth="0.9" strokeOpacity="0.3" />
+            <line x1="32" y1="65"  x2="12" y2="86" stroke="white" strokeWidth="0.7" strokeOpacity="0.25" />
+            <line x1="32" y1="65"  x2="52" y2="86" stroke="white" strokeWidth="0.7" strokeOpacity="0.25" />
+          </svg>
+
+          {/* Leaf E — tiny center accent for depth */}
+          <svg
+            viewBox="0 0 55 95"
+            className="absolute top-[62%] -left-3 w-11 opacity-[0.10] pointer-events-none"
+            style={{ transform: "rotate(-15deg) scaleX(-1)" }}
+            aria-hidden="true"
+          >
+            <path
+              d="M27 91 C6 76 -1 56 2 37 C5 18 15 3 27 2 C39 3 49 18 52 37 C55 56 48 76 27 91 Z"
+              fill="white"
+            />
+            <line x1="27" y1="91" x2="27" y2="2"  stroke="white" strokeWidth="1.3" strokeOpacity="0.35" />
+            <line x1="27" y1="33" x2="11" y2="52" stroke="white" strokeWidth="0.7" strokeOpacity="0.28" />
+            <line x1="27" y1="33" x2="43" y2="52" stroke="white" strokeWidth="0.7" strokeOpacity="0.28" />
+          </svg>
+
+          {/* Ambient radial glow - bottom center */}
+          <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-48 h-32 rounded-full bg-white/8 blur-3xl pointer-events-none" />
+          {/* Ambient radial glow - top center */}
+          <div className="absolute -top-8 left-1/2 -translate-x-1/2 w-36 h-36 rounded-full bg-white/5 blur-2xl pointer-events-none" />
+          {/* ──────────────────────────────────────────────────────── */}
+
           
-          <div className="p-6 border-b border-slate-100 shrink-0">
-            <Link href="/lansia" className="flex items-center gap-3.5 group">
-              <div className="w-12 h-12 bg-[#00624E] rounded-2xl flex items-center justify-center flex-shrink-0 shadow-sm text-white group-hover:scale-105 transition-transform">
-                <Shield className="w-6 h-6 fill-white/20 stroke-[2.2]" />
+          {/* 1. TOP LOGO & EXPAND/COLLAPSE TOGGLE */}
+          <div className={`flex items-center w-full mb-7 ${
+            isExpanded ? "justify-between px-1" : "flex-col gap-2"
+          }`}>
+            
+            {/* Brand Logo Mark */}
+            <Link href="/lansia" className="flex items-center gap-3 group shrink-0">
+              <div className="w-11 h-11 rounded-2xl bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/30 shadow-inner group-hover:scale-105 transition-transform shrink-0">
+                <ShieldCheck className="w-5.5 h-5.5 stroke-[2] text-white" />
               </div>
-              <div>
-                <p className="font-black text-slate-900 text-xl tracking-tight leading-none">
-                  JagaWarga
-                </p>
-              </div>
+              {isExpanded && (
+                <div className="animate-in fade-in duration-200">
+                  <span className="font-black text-[15px] tracking-tight block leading-tight text-white">
+                    TilikAman
+                  </span>
+                  <span className="font-bold text-[10.5px] tracking-wider text-white/75 block">
+                    Portal Lansia
+                  </span>
+                </div>
+              )}
             </Link>
+
+            {/* Toggle Buttons */}
+            {isExpanded ? (
+              <button
+                type="button"
+                id="btn-sidebar-collapse"
+                onClick={() => setIsExpanded(false)}
+                className="w-8 h-8 rounded-xl bg-white/15 hover:bg-white/25 flex items-center justify-center text-white transition-colors cursor-pointer shrink-0"
+              >
+                <ChevronLeft className="w-4 h-4" />
+              </button>
+            ) : (
+              <button
+                type="button"
+                id="btn-sidebar-expand"
+                onClick={() => setIsExpanded(true)}
+                className="flex items-center gap-0.5 px-2.5 py-1 rounded-full bg-white/20 hover:bg-white/30 text-white text-[10px] font-bold transition-all active:scale-95 cursor-pointer"
+              >
+                <span>Menu</span>
+                <ChevronRight className="w-3 h-3" />
+              </button>
+            )}
           </div>
 
-          <nav className="flex-1 px-4 py-5 space-y-2 overflow-y-auto min-h-0">
-            <p className="text-[10px] font-extrabold uppercase tracking-widest text-slate-400 px-3 mb-2">
-              Menu Utama
-            </p>
-            
+          {/* 2. NAVIGATION ITEMS */}
+          <nav className="flex flex-col w-full space-y-1.5">
             {NAV_ITEMS.map((item) => {
               const active = isActive(item.href, item.exact);
               return (
                 <Link
                   key={item.href}
                   href={item.href}
-                  className={`flex items-center gap-3.5 p-3.5 rounded-2xl transition-all duration-200 group ${
-                    active
-                      ? "bg-[#E6F4EA] text-[#00624E] shadow-2xs font-black border border-emerald-200/70"
-                      : "text-slate-600 hover:bg-slate-50 hover:text-slate-900 font-bold border border-transparent"
+                  className={`transition-all duration-200 relative group cursor-pointer ${
+                    isExpanded
+                      ? `flex items-center gap-3.5 px-3.5 py-3 rounded-2xl w-full ${
+                          active
+                            ? "bg-white/25 text-white font-black shadow-[0_4px_16px_rgba(0,0,0,0.08)] border border-white/40"
+                            : "text-white/80 hover:text-white hover:bg-white/15 font-semibold"
+                        }`
+                      : `w-12 h-12 rounded-2xl mx-auto flex items-center justify-center ${
+                          active
+                            ? "bg-white/25 text-white shadow-[0_6px_20px_rgba(0,0,0,0.08)] border border-white/40 scale-105"
+                            : "text-white/70 hover:text-white hover:bg-white/15"
+                        }`
                   }`}
                 >
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
-                    active ? "bg-[#00624E] text-white shadow-xs" : "bg-slate-100 text-slate-500 group-hover:bg-slate-200"
-                  }`}>
+                  <div className={`shrink-0 ${isExpanded && active ? "scale-110 transition-transform" : ""}`}>
                     {item.icon}
                   </div>
-                  <div className="min-w-0 flex-1">
-                    <p className="text-sm leading-tight">{item.label}</p>
-                    <p className={`text-[11px] font-medium mt-0.5 truncate ${
-                      active ? "text-emerald-800" : "text-slate-400"
-                    }`}>
-                      {item.subtitle}
-                    </p>
-                  </div>
-                  {active && (
-                    <span className="w-2 h-2 rounded-full bg-[#00624E]" />
+
+                  {/* Text descriptions when expanded */}
+                  {isExpanded && (
+                    <div className="min-w-0 flex-1 animate-in fade-in duration-200">
+                      <p className="text-xs font-black leading-tight truncate">{item.label}</p>
+                      <p className={`text-[10.5px] font-medium truncate mt-0.5 ${active ? "text-white/90" : "text-white/70"}`}>
+                        {item.subtitle}
+                      </p>
+                    </div>
                   )}
                 </Link>
               );
             })}
           </nav>
 
-          <div className="p-4 border-t border-slate-100 space-y-2.5 shrink-0">
-            <Link
-              href="/anak"
-              className="flex items-center justify-center gap-2 w-full bg-slate-50 hover:bg-slate-100 active:scale-95 text-slate-700 font-bold text-xs py-2.5 rounded-2xl transition-all border border-slate-200/80"
-            >
-              <ArrowLeftRight className="w-3.5 h-3.5 text-slate-500" />
-              <span>Beralih ke Portal Anak</span>
-            </Link>
-
+          {/* 3. BOTTOM ACTIONS — anchored to bottom */}
+          <div className={`mt-auto pt-6 flex flex-col gap-2.5 w-full ${isExpanded ? "px-1" : "items-center"}`}>
+            
+            {/* SOS Darurat Button */}
             <Link
               href="/lansia/darurat"
-              className="flex items-center justify-center gap-2.5 w-full bg-[#DC2626] hover:bg-[#b91c1c] active:scale-95 text-white font-black text-sm py-3.5 rounded-2xl shadow-md shadow-rose-500/20 transition-all group"
+              className={`rounded-2xl bg-rose-500 hover:bg-rose-600 text-white flex items-center justify-center shadow-md shadow-rose-900/20 active:scale-95 transition-all group ${
+                isExpanded ? "w-full py-3 px-3.5 gap-2.5 text-xs font-black" : "w-11 h-11"
+              }`}
             >
-              <AlertTriangle className="w-5 h-5 group-hover:scale-110 transition-transform animate-pulse" />
-              <span>Alarm Darurat SOS</span>
+              <AlertTriangle className="w-5 h-5 animate-pulse shrink-0" />
+              {isExpanded && (
+                <span className="truncate tracking-wide animate-in fade-in duration-200">
+                  ALARM DARURAT SOS
+                </span>
+              )}
+            </Link>
+
+            {/* Switch to Warga portal */}
+            <Link
+              href="/anak"
+              className={`flex items-center justify-center gap-1.5 text-[11px] font-bold text-white/80 hover:text-white transition-colors py-1.5 group rounded-xl hover:bg-white/10 ${
+                isExpanded ? "w-full px-2" : ""
+              }`}
+            >
+              <span>{isExpanded ? "Beralih ke Portal Warga" : "Warga"}</span>
+              <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-0.5 transition-transform" />
             </Link>
           </div>
+        </aside>
 
-        </div>
-      </aside>
+        {/* MOBILE TOP BAR (Responsive for Phone/Tablet) */}
+        <div className="lg:hidden bg-gradient-to-r from-[#56B4B2] to-[#4FAAA8] px-4 py-3.5 flex items-center justify-between text-white shadow-sm shrink-0">
+          <Link href="/lansia" className="flex items-center gap-2.5">
+            <div className="w-9 h-9 rounded-xl bg-white/20 backdrop-blur-sm flex items-center justify-center border border-white/30">
+              <ShieldCheck className="w-4.5 h-4.5 stroke-[2] text-white" />
+            </div>
+            <div>
+              <p className="font-black text-sm leading-tight text-white">TilikAman</p>
+              <p className="text-[10px] text-white/80 font-bold -mt-0.5">Portal Lansia</p>
+            </div>
+          </Link>
 
-      
-      <div className="flex-1 flex flex-col min-h-screen min-w-0 w-full max-w-full overflow-x-hidden">
-        
-        <header className="hidden lg:flex items-center justify-between px-8 py-3.5 bg-white/80 backdrop-blur-md border-b border-slate-200/80 sticky top-0 z-20 shadow-[0_1px_2px_rgba(0,0,0,0.02)]">
-          <div className="flex items-center gap-3">
-            <span className="text-xs font-bold text-slate-500">
-              Rabu, 26 Mei 2024
-            </span>
-          </div>
-
-          <div className="flex items-center gap-3">
-            
+          <div className="flex items-center gap-2">
             <Link
               href="/lansia/panduan"
-              id="btn-desktop-panduan-header"
-              className="flex items-center gap-1.5 px-3.5 py-2 rounded-2xl border border-slate-200 hover:border-emerald-300 hover:bg-emerald-50/50 text-slate-600 hover:text-[#00624E] text-xs font-bold active:scale-95 transition-all shadow-2xs"
-              title="Panduan Cara Pakai JagaWarga"
+              className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white text-xs font-bold"
+              title="Panduan"
             >
-              <BookOpen className="w-4 h-4 text-[#00624E]" />
-              <span>Panduan Pakai</span>
+              <BookOpen className="w-4 h-4" />
             </Link>
-
-            
             <Link
               href="/lansia/pengaturan"
-              id="btn-desktop-settings-header"
-              className="w-9 h-9 rounded-2xl border border-slate-200 hover:border-emerald-300 hover:bg-slate-100 flex items-center justify-center text-slate-600 hover:text-[#00624E] active:scale-95 transition-all shadow-2xs"
-              title="Pengaturan Teks & Suara"
+              className="w-8 h-8 rounded-xl bg-white/15 flex items-center justify-center text-white"
+              title="Pengaturan"
             >
               <Settings className="w-4 h-4" />
             </Link>
-
-            <div className="h-6 w-[1px] bg-slate-200 mx-1" />
-
-            
             <Link
-              href="/lansia/profil"
-              id="btn-desktop-profile-header"
-              className="flex items-center gap-3 p-1.5 pl-3.5 rounded-2xl hover:bg-slate-100/80 active:scale-95 transition-all group"
-              title="Buka Profil & Data Medis Saya"
+              href="/lansia/darurat"
+              className="px-2.5 py-1 rounded-xl bg-rose-500 text-white text-xs font-black flex items-center gap-1 shadow-xs"
             >
-              <span className="text-xs font-black text-slate-900 group-hover:text-[#00624E] transition-colors">
-                Bapak Prabowo
-              </span>
-              <div className="w-9 h-9 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-xs shadow-xs group-hover:scale-105 transition-transform">
-                BP
-              </div>
+              <AlertTriangle className="w-3.5 h-3.5" />
+              <span>SOS</span>
             </Link>
           </div>
-        </header>
+        </div>
 
-        
-        <header className="lg:hidden sticky top-0 z-20 pt-3 px-4 pb-2 bg-[#F8FAFC]">
-          <div className="bg-white rounded-2xl shadow-xs border border-slate-200/60 px-4 h-14 flex items-center justify-between">
-            <Link
-              href="/lansia/profil"
-              id="btn-mobile-profile-header"
-              className="flex items-center gap-2.5 hover:opacity-80 active:scale-95 transition-all"
-              title="Buka Profil & Data Medis Saya"
-            >
-              <div className="w-9 h-9 rounded-2xl bg-[#00624E] text-white flex items-center justify-center font-black text-xs shadow-xs">
-                BP
-              </div>
-              <div>
-                <p className="text-[10px] font-bold text-slate-400 leading-none">
-                  SELAMAT PAGI
-                </p>
-                <p className="text-xs font-black text-slate-900 leading-tight mt-0.5">
-                  Bapak Prabowo
-                </p>
-              </div>
-            </Link>
-
-            <div className="flex items-center gap-1.5">
-              
-              <Link
-                href="/lansia/panduan"
-                id="btn-mobile-panduan-header"
-                className="w-9 h-9 rounded-2xl border border-emerald-200 bg-emerald-50/80 flex items-center justify-center text-[#00624E] active:scale-95 transition-all"
-                title="Buka Panduan"
-              >
-                <BookOpen className="w-4 h-4" />
-              </Link>
-
-              
-              <Link
-                href="/lansia/pengaturan"
-                id="btn-mobile-settings-header"
-                className="w-9 h-9 rounded-2xl border border-slate-200 bg-white flex items-center justify-center text-slate-600 active:scale-95 transition-all"
-                title="Buka Pengaturan"
-              >
-                <Settings className="w-4 h-4" />
-              </Link>
-            </div>
-          </div>
-        </header>
-
-        
-        <main className="flex-1 w-full min-w-0 max-w-full overflow-x-hidden">
+        {/* MAIN BODY VIEWPORT */}
+        <main className="flex-1 flex flex-col min-w-0 bg-[#F7FBFC] min-h-screen">
           {children}
         </main>
-      </div>
 
-      
-      <div className="lg:hidden fixed bottom-4 inset-x-4 z-50 max-w-md mx-auto">
-        <nav className="bg-white/95 backdrop-blur-xl rounded-full shadow-[0_12px_35px_rgba(0,0,0,0.12)] border border-slate-200/80 px-2 py-1.5 flex items-center justify-around relative">
-          
-          
-          <Link
-            href="/lansia"
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia", true)
-                ? "text-[#00624E] font-black"
-                : "text-slate-400 hover:text-slate-600 font-bold"
-            }`}
-          >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia", true) ? "bg-[#E6F4EA]" : ""}`}>
-              <Home className="w-5 h-5" />
-            </span>
-            <span className="text-[9px] mt-0.5">Beranda</span>
-          </Link>
-
-          
-          <Link
-            href="/lansia/bantuan"
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/bantuan", false)
-                ? "text-[#00624E] font-black"
-                : "text-slate-400 hover:text-slate-600 font-bold"
-            }`}
-          >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/bantuan", false) ? "bg-[#E6F4EA]" : ""}`}>
-              <HandHeart className="w-5 h-5" />
-            </span>
-            <span className="text-[9px] mt-0.5">Bantuan</span>
-          </Link>
-
-          
-          <Link
-            href="/lansia/darurat"
-            className="flex flex-col items-center justify-center -mt-5 group"
-            title="Alarm Darurat SOS RT 04"
-          >
-            <div className="w-12 h-12 rounded-full bg-[#DC2626] text-white flex items-center justify-center shadow-lg shadow-rose-600/35 border-2 border-white ring-2 ring-rose-100 group-hover:scale-105 active:scale-95 transition-all">
-              <AlertTriangle className="w-6 h-6 animate-pulse" />
-            </div>
-            <span className="text-[9px] font-black text-rose-600 mt-1">SOS</span>
-          </Link>
-
-          
-          <Link
-            href="/lansia/status"
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/status", false)
-                ? "text-[#00624E] font-black"
-                : "text-slate-400 hover:text-slate-600 font-bold"
-            }`}
-          >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/status", false) ? "bg-[#E6F4EA]" : ""}`}>
-              <Activity className="w-5 h-5" />
-            </span>
-            <span className="text-[9px] mt-0.5">Status</span>
-          </Link>
-
-          
-          <Link
-            href="/lansia/alkes"
-            className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-2xl transition-all ${
-              isActive("/lansia/alkes", false)
-                ? "text-[#00624E] font-black"
-                : "text-slate-400 hover:text-slate-600 font-bold"
-            }`}
-          >
-            <span className={`p-1.5 rounded-xl ${isActive("/lansia/alkes", false) ? "bg-[#E6F4EA]" : ""}`}>
-              <Accessibility className="w-5 h-5" />
-            </span>
-            <span className="text-[9px] mt-0.5">Alkes</span>
-          </Link>
-
-        </nav>
-      </div>
+        {/* MOBILE BOTTOM NAVIGATION BAR */}
+        <div className="lg:hidden sticky bottom-0 z-40 bg-white/95 backdrop-blur-xl border-t border-[#DFECEE] px-3 py-2 flex items-center justify-around shadow-lg">
+          {NAV_ITEMS.map((item) => {
+            const active = isActive(item.href, item.exact);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                className={`flex flex-col items-center justify-center py-1 px-2.5 rounded-xl transition-all ${
+                  active ? "text-[#4FAAA8] font-black" : "text-slate-400 hover:text-slate-600 font-bold"
+                }`}
+              >
+                <div className={`p-1 rounded-lg ${active ? "bg-[#56B4B2]/15 text-[#4FAAA8]" : ""}`}>
+                  {item.icon}
+                </div>
+                <span className="text-[10px] mt-0.5">{item.label}</span>
+              </Link>
+            );
+          })}
+        </div>
 
     </div>
   );
