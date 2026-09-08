@@ -1,7 +1,8 @@
 "use client";
 
 import Link from "next/link";
-import { useState, Suspense } from "react";
+import { useState, useEffect, Suspense } from "react";
+import QRCode from "qrcode";
 import { 
   ArrowLeft, 
   Check, 
@@ -22,45 +23,47 @@ import {
 type TrackingState = 1 | 2 | 3 | 4;
 
 function QrCodeIllustration() {
+  const [qrUrl, setQrUrl] = useState<string>("");
+
+  useEffect(() => {
+    const qrContent = 
+`TILIKAMAN — VERIFIKASI SERAH TERIMA
+PIN VALIDASI: 8241
+ID Bantuan: #B-0824
+Penerima: Bpk. Prabowo Subianto (RT 04 Sukamaju)
+Relawan Pengantar: Pak Teddy (Blok C4 No. 12)
+Obat: 1 Strip Amlodipin 5mg
+Status: LUNAS & TERVERIFIKASI`;
+
+    QRCode.toDataURL(qrContent, {
+      width: 360,
+      margin: 1,
+      errorCorrectionLevel: "H",
+      color: {
+        dark: "#0F172A",
+        light: "#FFFFFF",
+      },
+    })
+      .then((url) => setQrUrl(url))
+      .catch((err) => console.error("Gagal generate QR Code:", err));
+  }, []);
+
   return (
-    <div className="w-48 h-48 sm:w-52 sm:h-52 bg-white p-3 rounded-2xl border-2 border-slate-900 mx-auto shadow-xs flex flex-col items-center justify-center relative">
-      <svg viewBox="0 0 120 120" className="w-full h-full" fill="none">
-        <rect x="10" y="10" width="30" height="30" rx="4" fill="#0F172A" />
-        <rect x="16" y="16" width="18" height="18" rx="2" fill="white" />
-        <rect x="21" y="21" width="8" height="8" rx="1" fill="#0F172A" />
-
-        <rect x="80" y="10" width="30" height="30" rx="4" fill="#0F172A" />
-        <rect x="86" y="16" width="18" height="18" rx="2" fill="white" />
-        <rect x="91" y="21" width="8" height="8" rx="1" fill="#0F172A" />
-
-        <rect x="10" y="80" width="30" height="30" rx="4" fill="#0F172A" />
-        <rect x="16" y="86" width="18" height="18" rx="2" fill="white" />
-        <rect x="21" y="91" width="8" height="8" rx="1" fill="#0F172A" />
-
-        <rect x="46" y="12" width="6" height="6" fill="#0F172A" />
-        <rect x="58" y="12" width="6" height="6" fill="#0F172A" />
-        <rect x="68" y="18" width="6" height="6" fill="#0F172A" />
-        <rect x="46" y="24" width="6" height="6" fill="#0F172A" />
-        <rect x="58" y="30" width="6" height="6" fill="#0F172A" />
-        <rect x="68" y="34" width="6" height="6" fill="#0F172A" />
-        
-        <rect x="12" y="46" width="6" height="6" fill="#0F172A" />
-        <rect x="24" y="58" width="6" height="6" fill="#0F172A" />
-        <rect x="34" y="46" width="6" height="6" fill="#0F172A" />
-        <rect x="80" y="46" width="6" height="6" fill="#0F172A" />
-        <rect x="92" y="58" width="6" height="6" fill="#0F172A" />
-        <rect x="102" y="46" width="6" height="6" fill="#0F172A" />
-        
-        <rect x="46" y="80" width="6" height="6" fill="#0F172A" />
-        <rect x="58" y="86" width="6" height="6" fill="#0F172A" />
-        <rect x="68" y="92" width="6" height="6" fill="#0F172A" />
-        <rect x="80" y="80" width="6" height="6" fill="#0F172A" />
-        <rect x="92" y="86" width="6" height="6" fill="#0F172A" />
-        <rect x="102" y="98" width="6" height="6" fill="#0F172A" />
-
-        <rect x="48" y="48" width="24" height="24" rx="6" fill="#00624E" />
-        <path d="M54 60 L58 64 L66 54" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" />
-      </svg>
+    <div className="w-48 h-48 sm:w-52 sm:h-52 bg-white p-2.5 rounded-2xl border-2 border-slate-900 mx-auto shadow-xs flex items-center justify-center relative">
+      {qrUrl ? (
+        <div className="relative w-full h-full flex items-center justify-center">
+          <img src={qrUrl} alt="Kode QR Serah Terima" className="w-full h-full object-contain rounded-xl" />
+          <div className="absolute inset-0 m-auto w-10 h-10 rounded-xl bg-white p-1 shadow-md border border-slate-200 flex items-center justify-center pointer-events-none">
+            <div className="w-full h-full rounded-lg bg-[#00624E] text-white flex items-center justify-center shadow-2xs">
+              <ShieldCheck className="w-4 h-4 stroke-[2.5]" />
+            </div>
+          </div>
+        </div>
+      ) : (
+        <div className="w-full h-full flex items-center justify-center text-slate-400 text-xs animate-pulse">
+          Membuat Kode QR...
+        </div>
+      )}
     </div>
   );
 }

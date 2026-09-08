@@ -19,7 +19,7 @@ export default function LoginPage() {
   const [phone, setPhone] = useState("81234567890");
   const [pin, setPin] = useState("123456");
   const [showPin, setShowPin] = useState(false);
-  const [selectedRole, setSelectedRole] = useState<"siaga" | "lansia">("siaga");
+  const [selectedRole, setSelectedRole] = useState<"warga" | "lansia">("warga");
   const [isLoading, setIsLoading] = useState(false);
 
   const handleLogin = (e: React.FormEvent) => {
@@ -38,7 +38,7 @@ export default function LoginPage() {
     }, 500);
   };
 
-  const handleQuickDemo = (role: "siaga" | "lansia") => {
+  const handleQuickDemo = (role: "warga" | "lansia") => {
     if (typeof window !== "undefined" && "vibrate" in navigator) {
       try { navigator.vibrate(30); } catch {}
     }
@@ -95,19 +95,19 @@ export default function LoginPage() {
           </div>
 
           {/* Role Toggle Selector */}
-          <div className="grid grid-cols-2 gap-2.5 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 mb-6">
+          <div className="grid grid-cols-2 gap-2 p-1.5 bg-slate-100/90 rounded-2xl border border-slate-200/80 mb-6">
             <button
               type="button"
-              id="tab-role-siaga"
-              onClick={() => handleQuickDemo("siaga")}
+              id="tab-role-warga"
+              onClick={() => handleQuickDemo("warga")}
               className={`py-3 px-3 rounded-xl font-black text-xs sm:text-sm transition-all flex items-center justify-center gap-2 cursor-pointer ${
-                selectedRole === "siaga"
+                selectedRole === "warga"
                   ? "bg-white text-[#00624E] shadow-2xs"
                   : "text-slate-500 hover:text-slate-800"
               }`}
             >
               <HeartHandshake className="w-4 h-4 stroke-[2.5]" />
-              <span>Warga Siaga</span>
+              <span>Warga &amp; Keluarga Siaga</span>
             </button>
 
             <button
@@ -121,7 +121,7 @@ export default function LoginPage() {
               }`}
             >
               <Accessibility className="w-4 h-4 stroke-[2.5]" />
-              <span>Lansia / Warga</span>
+              <span>Lansia / Warga Rentan</span>
             </button>
           </div>
 
@@ -229,6 +229,19 @@ export default function LoginPage() {
             <div className="flex flex-wrap items-center justify-center gap-2">
               <button
                 type="button"
+                id="demo-login-warga"
+                onClick={() => handleQuickDemo("warga")}
+                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
+                  selectedRole === "warga"
+                    ? "bg-[#00624E] text-white border-[#00624E]"
+                    : "bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200"
+                }`}
+              >
+                Ibu Titiek / Dimas (Warga &amp; Keluarga Siaga)
+              </button>
+
+              <button
+                type="button"
                 id="demo-login-lansia"
                 onClick={() => handleQuickDemo("lansia")}
                 className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
@@ -238,19 +251,6 @@ export default function LoginPage() {
                 }`}
               >
                 Bapak Prabowo (Lansia)
-              </button>
-
-              <button
-                type="button"
-                id="demo-login-siaga"
-                onClick={() => handleQuickDemo("siaga")}
-                className={`px-3.5 py-1.5 rounded-full text-xs font-bold transition-all cursor-pointer border ${
-                  selectedRole === "siaga"
-                    ? "bg-[#00624E] text-white border-[#00624E]"
-                    : "bg-slate-50 hover:bg-slate-100 text-slate-700 border-slate-200"
-                }`}
-              >
-                Dimas Prasetyo (Warga Siaga)
               </button>
             </div>
           </div>
