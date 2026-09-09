@@ -33,9 +33,14 @@ import {
   Sparkles,
   Calendar as CalendarIcon,
   ShieldCheck,
-  RotateCcw
+  RotateCcw,
+  Zap,
+  BatteryCharging
 } from "lucide-react";
 import { speakIndonesian } from "@/lib/speak";
+import { useRealtimeCheckin, createHelpTicket } from "@/lib/sync/realtimeStore";
+import { useAmbientCheckin } from "@/hooks/useAmbientCheckin";
+import { parseElderlySpeech } from "@/lib/voiceParser";
 
 function triggerHaptic(duration = 40) {
   if (typeof window !== "undefined" && "vibrate" in navigator) {
@@ -65,18 +70,13 @@ const RELAWAN_LIST: Relawan[] = [
 export default function LansiaDashboardPage() {
   const router = useRouter();
 
-  // Check-in state (FR-01)
-  const [isCheckedIn, setIsCheckedIn] = useState(true);
-  const [checkinTime, setCheckinTime] = useState("08:00 WIB");
-  const [checkinStatus, setCheckinStatus] = useState<"sehat" | "kurang_enak" | "butuh_bantuan">("sehat");
+  const { checkin, performCheckin: doRealtimeCheckin, performSnooze } = useRealtimeCheckin();
+  const { isCharging, simulateUnplug, lastAmbientTrigger } = useAmbientCheckin(checkin.status);
   const [showCheckinModal, setShowCheckinModal] = useState(false);
-
-  // Voice note recording simulation (FR-04)
   const [isRecording, setIsRecording] = useState(false);
   const [voiceText, setVoiceText] = useState("");
   const [showVoiceModal, setShowVoiceModal] = useState(false);
-
-  // Active bookmark tab (Documents, Contacts, Address)
+  const [voiceSuccessToast, setVoiceSuccessToast] = useState<string | null>(null);
   const [activeBookmark, setActiveBookmark] = useState<"documents" | "contacts" | "address" | null>(null);
 
   // Selected contact for call modal
@@ -106,11 +106,8 @@ export default function LansiaDashboardPage() {
 
   const handleSelectCheckinCondition = (condition: "sehat" | "kurang_enak" | "butuh_bantuan") => {
     triggerHaptic(50);
-    const now = new Date();
-    const timeStr = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")} WIB`;
-    setCheckinTime(timeStr);
-    setCheckinStatus(condition);
-    setIsCheckedIn(true);
+    const targetStatus = condition === "sehat" ? "success" : condition;
+    doRealtimeCheckin(targetStatus, "manual_button");
     setShowCheckinModal(false);
 
     if (condition === "sehat") {
@@ -134,6 +131,16 @@ export default function LansiaDashboardPage() {
     }, 2800);
   };
 
+  const handleSendParsedVoice = () => {
+    triggerHaptic(50);
+    const parsed = parseElderlySpeech(voiceText);
+    createHelpTicket(parsed.category, parsed.summary, "lansia-voice");
+    setShowVoiceModal(false);
+    setVoiceSuccessToast(`Tiket bantuan (${parsed.category.replace("_", " ")}) berhasil dikirim ke relawan RT 04!`);
+    speakIndonesian("Permintaan bantuan telah terkirim ke relawan RT 04. Relawan segera menuju lokasi.");
+    setTimeout(() => setVoiceSuccessToast(null), 5000);
+  };
+
   const toggleReminder = (id: number) => {
     triggerHaptic(30);
     setReminders(prev => prev.map(r => r.id === id ? { ...r, done: !r.done } : r));
@@ -142,6 +149,19 @@ export default function LansiaDashboardPage() {
   return (
     <div className="p-4 sm:p-5 lg:p-6 flex flex-col gap-5 lg:gap-6 w-full max-w-full">
       
+      {voiceSuccessToast && (
+        <div className="fixed top-4 inset-x-4 z-[120] max-w-md mx-auto">
+          <div className="bg-[#00624E] text-white px-5 py-3.5 rounded-2xl shadow-xl flex items-center justify-between gap-3 border border-emerald-300/40 animate-in fade-in slide-in-from-top-2">
+            <div className="flex items-center gap-2.5">
+              <CheckCircle2 className="w-5 h-5 text-emerald-300 stroke-[2.5] flex-shrink-0" />
+              <p className="text-xs sm:text-sm font-bold">{voiceSuccessToast}</p>
+            </div>
+            <button onClick={() => setVoiceSuccessToast(null)} className="text-xs font-black px-3 py-1 bg-white/20 hover:bg-white/30 rounded-full transition-all shrink-0 cursor-pointer">
+              Tutup
+            </button>
+          </div>
+        </div>
+      )}
       {/* ============================================================ */}
       {/* ============================================================ */}
       {/* 1. TOP HEADER - GREETING & VOICE ASSISTANT                   */}
@@ -213,32 +233,71 @@ export default function LansiaDashboardPage() {
                 </p>
               </div>
 
-              {/* Primary Action Button: Lapor Kabar Sehat (FR-01 Halo Warga) */}
-              <div className="relative z-10 pt-4 flex items-center">
-                <button
-                  type="button"
-                  id="btn-welcome-checkin"
-                  onClick={() => {
-                    triggerHaptic(40);
-                    setShowCheckinModal(true);
-                  }}
-                  className="group/btn inline-flex items-center gap-2.5 px-4.5 py-2.5 rounded-full bg-white text-emerald-900 hover:bg-emerald-50 active:scale-95 transition-all duration-200 shadow-md font-black text-xs sm:text-sm cursor-pointer border border-white/80"
-                  title="Klik untuk lapor atau perbarui kondisi kabar kesehatan hari ini"
-                >
-                  <span className={`w-2.5 h-2.5 rounded-full ${
-                    checkinStatus === "sehat" ? "bg-emerald-500 animate-pulse" : checkinStatus === "kurang_enak" ? "bg-amber-500 animate-ping" : "bg-rose-500 animate-ping"
-                  }`} />
-                  <span>
-                    {checkinStatus === "sehat"
-                      ? `Lapor Sehat (${checkinTime})`
-                      : checkinStatus === "kurang_enak"
-                      ? `Kurang Enak (${checkinTime})`
-                      : `Butuh Bantuan (${checkinTime})`}
-                  </span>
-                  <span className="text-[10.5px] font-bold text-emerald-700/80 bg-emerald-100/70 px-2 py-0.5 rounded-md group-hover/btn:bg-emerald-200/70 transition-colors">
-                    Ubah
-                  </span>
-                </button>
+              <div className="relative z-10 pt-4 flex flex-col gap-2.5">
+                <div className="flex items-center flex-wrap gap-2">
+                  <button
+                    type="button"
+                    id="btn-welcome-checkin"
+                    onClick={() => {
+                      triggerHaptic(40);
+                      setShowCheckinModal(true);
+                    }}
+                    className="group/btn inline-flex items-center gap-2.5 px-4.5 py-2.5 rounded-full bg-white text-emerald-900 hover:bg-emerald-50 active:scale-95 transition-all duration-200 shadow-md font-black text-xs sm:text-sm cursor-pointer border border-white/80"
+                    title="Klik untuk lapor atau perbarui kondisi kabar kesehatan hari ini"
+                  >
+                    <span className={`w-2.5 h-2.5 rounded-full ${
+                      checkin.status === "success" 
+                        ? "bg-emerald-500 animate-pulse" 
+                        : checkin.status === "snoozed"
+                        ? "bg-amber-400"
+                        : "bg-rose-500 animate-ping"
+                    }`} />
+                    <span>
+                      {checkin.status === "success"
+                        ? `Lapor Sehat (${checkin.checkinTime || "08:00 WIB"})`
+                        : checkin.status === "snoozed"
+                        ? `Tidur Lagi (s/d ${checkin.windowEnd})`
+                        : "Belum Check-in Pagi"}
+                    </span>
+                    <span className="text-[10.5px] font-bold text-emerald-700/80 bg-emerald-100/70 px-2 py-0.5 rounded-md group-hover/btn:bg-emerald-200/70 transition-colors">
+                      Ubah
+                    </span>
+                  </button>
+
+                  {checkin.status !== "success" && checkin.snoozeCount < 2 && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        triggerHaptic(30);
+                        performSnooze();
+                        speakIndonesian("Waktu istirahat diperpanjang 30 menit.");
+                      }}
+                      className="inline-flex items-center gap-1.5 px-3 py-2 rounded-full bg-black/20 hover:bg-black/30 text-white text-xs font-bold transition-all active:scale-95 cursor-pointer backdrop-blur-xs border border-white/20"
+                      title="Tunda checkin 30 menit (maksimal 2x per hari)"
+                    >
+                      <Clock className="w-3.5 h-3.5 text-amber-300" />
+                      <span>Snooze (+30m)</span>
+                    </button>
+                  )}
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <button
+                    type="button"
+                    onClick={() => {
+                      triggerHaptic(50);
+                      simulateUnplug();
+                    }}
+                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-white/20 hover:bg-white/30 text-white border border-white/30 text-[11px] font-bold transition-all active:scale-95 cursor-pointer backdrop-blur-xs group/ambient"
+                    title="Klik untuk mensimulasikan sensor cabut charger bangun tidur"
+                  >
+                    <Zap className="w-3.5 h-3.5 text-amber-300 fill-amber-300 animate-pulse" />
+                    <span>Sensor Charger: {isCharging ? "Tersambung" : "Dilepas (Aktif)"}</span>
+                    <span className="text-[10px] bg-white/30 group-hover/ambient:bg-amber-300 group-hover/ambient:text-slate-900 px-1.5 py-0.2 rounded font-extrabold transition-colors">
+                      Tes Sensor
+                    </span>
+                  </button>
+                </div>
               </div>
 
               {/* Friendly Senior Bapak Illustration with Smooth Floating Animation */}
@@ -908,26 +967,26 @@ export default function LansiaDashboardPage() {
               </p>
             </div>
 
-            <div className="space-y-2.5 pt-2 text-left">
+            <div className="space-y-2.5">
               <button
                 type="button"
                 onClick={() => handleSelectCheckinCondition("sehat")}
                 className={`w-full p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group ${
-                  checkinStatus === "sehat"
+                  checkin.status === "success" && checkin.moodNote !== "Kurang enak badan"
                     ? "bg-emerald-50 border-emerald-500 ring-2 ring-emerald-500/20 shadow-xs"
                     : "bg-slate-50 hover:bg-emerald-50/50 border-slate-200"
                 }`}
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center shrink-0">
-                    <Smile className="w-5 h-5" />
+                    <Check className="w-5 h-5 stroke-[2.5]" />
                   </div>
                   <div>
                     <p className="font-black text-xs sm:text-sm text-slate-900">Saya Sehat &amp; Bugar</p>
                     <p className="text-[11px] text-slate-500 font-medium">Laporan normal diteruskan ke RT</p>
                   </div>
                 </div>
-                {checkinStatus === "sehat" ? (
+                {checkin.status === "success" && checkin.moodNote !== "Kurang enak badan" ? (
                   <CheckCircle2 className="w-5 h-5 text-emerald-600 shrink-0" />
                 ) : (
                   <span className="w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-emerald-400 shrink-0" />
@@ -938,7 +997,7 @@ export default function LansiaDashboardPage() {
                 type="button"
                 onClick={() => handleSelectCheckinCondition("kurang_enak")}
                 className={`w-full p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group ${
-                  checkinStatus === "kurang_enak"
+                  checkin.moodNote === "Kurang enak badan"
                     ? "bg-amber-50 border-amber-500 ring-2 ring-amber-500/20 shadow-xs"
                     : "bg-slate-50 hover:bg-amber-50/50 border-slate-200"
                 }`}
@@ -952,7 +1011,7 @@ export default function LansiaDashboardPage() {
                     <p className="text-[11px] text-slate-500 font-medium">Minta kader posyandu menengok</p>
                   </div>
                 </div>
-                {checkinStatus === "kurang_enak" ? (
+                {checkin.moodNote === "Kurang enak badan" ? (
                   <CheckCircle2 className="w-5 h-5 text-amber-600 shrink-0" />
                 ) : (
                   <span className="w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-amber-400 shrink-0" />
@@ -962,11 +1021,7 @@ export default function LansiaDashboardPage() {
               <button
                 type="button"
                 onClick={() => handleSelectCheckinCondition("butuh_bantuan")}
-                className={`w-full p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group ${
-                  checkinStatus === "butuh_bantuan"
-                    ? "bg-rose-50 border-rose-500 ring-2 ring-rose-500/20 shadow-xs"
-                    : "bg-slate-50 hover:bg-rose-50/50 border-slate-200"
-                }`}
+                className="w-full p-3.5 rounded-2xl border transition-all cursor-pointer flex items-center justify-between group bg-slate-50 hover:bg-rose-50/50 border-slate-200"
               >
                 <div className="flex items-center gap-3">
                   <div className="w-9 h-9 rounded-xl bg-rose-100 text-rose-700 flex items-center justify-center shrink-0">
@@ -977,11 +1032,7 @@ export default function LansiaDashboardPage() {
                     <p className="text-[11px] text-slate-500 font-medium">Sinyal siaga ke relawan tetangga</p>
                   </div>
                 </div>
-                {checkinStatus === "butuh_bantuan" ? (
-                  <CheckCircle2 className="w-5 h-5 text-rose-600 shrink-0" />
-                ) : (
-                  <span className="w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-rose-400 shrink-0" />
-                )}
+                <span className="w-4 h-4 rounded-full border-2 border-slate-300 group-hover:border-rose-400 shrink-0" />
               </button>
             </div>
 
@@ -1173,16 +1224,32 @@ export default function LansiaDashboardPage() {
               &quot;{voiceText}&quot;
             </div>
 
+            {!isRecording && voiceText && !voiceText.includes("Mendengarkan") && (
+              <div className="p-3 rounded-2xl bg-emerald-50 border border-emerald-200 text-left space-y-1">
+                <div className="flex items-center justify-between">
+                  <span className="text-[10px] font-black uppercase text-emerald-800 tracking-wider">
+                    Hasil Analisis AI Suara
+                  </span>
+                  <span className="text-[10px] font-black bg-emerald-200 text-emerald-900 px-2 py-0.5 rounded-full">
+                    {parseElderlySpeech(voiceText).category.replace("_", " ").toUpperCase()}
+                  </span>
+                </div>
+                <p className="text-xs font-black text-slate-900">
+                  {parseElderlySpeech(voiceText).summary}
+                </p>
+              </div>
+            )}
+
             <div className="space-y-2 pt-2">
               {!isRecording ? (
-                <Link
-                  href="/lansia/bantuan?kategori=obat"
-                  onClick={() => setShowVoiceModal(false)}
+                <button
+                  type="button"
+                  onClick={handleSendParsedVoice}
                   className="w-full py-3.5 bg-[#00624E] hover:bg-[#004D3D] active:scale-95 text-white font-black text-xs sm:text-sm rounded-2xl shadow-xs flex items-center justify-center gap-2 transition-all cursor-pointer"
                 >
                   <Check className="w-4 h-4 stroke-[3]" />
-                  <span>Kirim ke Relawan RT</span>
-                </Link>
+                  <span>Kirim Tiket ke Relawan RT</span>
+                </button>
               ) : null}
               <button
                 type="button"
